@@ -1,6 +1,6 @@
 {
   "name": "deputy-frontend",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -21,6 +21,7 @@
     "@angular/router": "~11.0.5",
     "@ngrx/store": "^10.1.2",
     "rxjs": "~6.6.0",
+    "rxjs-fetch": "^2.1.6",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },

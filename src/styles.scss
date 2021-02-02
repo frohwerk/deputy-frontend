@@ -1,1 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+button {
+    // line-height: 200%;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: dodgerblue;
+    color: white;
+    font-weight: bold;
+    border: none;
+    &:active {
+        background-color: royalblue;
+    }
+}
+
+button.remove {
+    background-color: crimson
+}
