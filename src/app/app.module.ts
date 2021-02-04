@@ -4,14 +4,32 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ArtifactService } from './artifact/artifact.service';
+import { UnassignedPipe } from './artifact/unassigned.pipe';
+import { IndexComponent } from './index/index.component';
+import { ApplicationsListComponent } from './applications/applications-list/applications-list.component';
+import { ApplicationViewComponent } from './applications/application-view/application-view.component';
+import { ApplicationEditComponent } from './applications/application-edit/application-edit.component';
+import { ComponentListComponent } from './applications/application-edit/component-list/component-list.component';
+import { HttpClientModule } from '@angular/common/http';
+import { DefaultPipe } from './shared/pipes/default.pipe';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ComponentListComponent,
+    UnassignedPipe,
+    ApplicationEditComponent,
+    IndexComponent,
+    ApplicationsListComponent,
+    ApplicationViewComponent,
+    DefaultPipe,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
   ],
   providers: [
     ArtifactService

@@ -1,15 +1,15 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Application } from './application/application';
-import { Artifact } from './artifact/artifact';
-import { ArtifactService } from './artifact/artifact.service';
+import { Application } from '../../application/application';
+import { Artifact } from '../../artifact/artifact';
+import { ArtifactService } from '../../artifact/artifact.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-edit-application',
+  templateUrl: './application-edit.component.html',
+  styleUrls: ['./application-edit.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class ApplicationEditComponent implements OnInit {
 
   applications: Application[] = [];
 

@@ -1,0 +1,13 @@
+#artifacts {
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    justify-content: center;
+
+    & > div {
+        flex-grow: 1;
+        flex-basis: 0px;
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+}

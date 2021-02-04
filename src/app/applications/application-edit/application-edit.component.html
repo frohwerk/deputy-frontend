@@ -1,0 +1,10 @@
+<div id="artifacts">
+    <div id="artifacts-unasigned">
+        <h2>Nicht zugeordnet</h2>
+        <app-component-list class="unassigned" [artifacts]="(artifacts | unassigned)" (onaction)="assign($event)"></app-component-list>
+    </div>
+    <div id="artifacts-assigned">
+        <h2>Flappy Bird</h2>
+        <app-component-list class="assigned" [artifacts]="members" (onaction)="unassign($event)"></app-component-list>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+:host button {
+    min-width: 6em;
+    line-height: 200%;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: dodgerblue;
+    color: white;
+    font-weight: bold;
+    border: none;
+    &:active {
+        background-color: royalblue;
+    }
+    &::before { content: 'Add'; }
+}
+
+:host.assigned button {
+    background-color: crimson;
+    &:active {
+        background-color: darkred;
+    }
+    &::before { content: 'Remove'; }
+}
+
+.component {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.5em 1.25em;
+    border: 3px solid gray;
+
+    white-space: nowrap;
+
+    .component-name { font-weight: bold; }
+    .component-name::after { content: ' '; white-space: pre; overflow: hidden; }
+
+    .component-image::before { content: '('; white-space: pre; overflow: hidden; }
+    .component-image::after { content: ') '; white-space: pre; overflow: hidden; }
+
+    button {
+        margin-left: auto;
+    }
+}
+
+.component {
+    border-top-width: 0;
+}
+
+.component:first-of-type {
+    border-top-left-radius: 0.35em;
+    border-top-right-radius: 0.35em;
+    border-top-width: 3px;
+}
+
+.component:last-of-type {
+    border-bottom-left-radius: 0.35em;
+    border-bottom-right-radius: 0.35em;
+}
+
+.component.empty {
+    color: gray;
+    border-style: dashed;
+}

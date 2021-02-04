@@ -1,0 +1,10 @@
+<ul>
+    <li *ngFor="let application of applications">
+        <a [routerLink]="[application.id]" routerLinkActive="router-link-active">{{application.name}}</a>
+        <span></span>
+    </li>
+    <li>
+        <input type="text" placeholder="Enter new application name" [(ngModel)]="name" />
+        <button type="button" (click)="onAdd()">Add</button>
+    </li>
+</ul>

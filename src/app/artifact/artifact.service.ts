@@ -8,7 +8,7 @@ import { Artifact } from "./artifact";
 export class ArtifactService {
 
     watch(): Observable<WatchEvent<Artifact>> {
-        return fromFetch('/api/apps/esign/artifacts', {
+        return fromFetch('/api/apps/example/artifacts', {
             selector: response => {
                 console.log('Response incoming:', response.status, response.statusText);
                 const reader = response.body?.getReader();

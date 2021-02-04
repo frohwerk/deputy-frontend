@@ -1,0 +1,8 @@
+<div class="component-list">
+  <div class="component" *ngFor="let artifact of artifacts">
+    <div class="component-name">{{ artifact?.name }}</div>
+    <div class="component-image">{{ artifact?.image }}</div>
+    <button class="remove" type="button" (click)="onaction.emit(artifact)"></button>
+  </div>
+  <div class="component empty" *ngIf="artifacts?.length == 0">There are currently no artifacts</div>
+</div>
