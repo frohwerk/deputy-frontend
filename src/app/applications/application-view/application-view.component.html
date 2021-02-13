@@ -1,7 +1,10 @@
-<h1>{{app ? app.name : 'Loading...'}}</h1>
-<ul>
-    <li *ngFor="let component of app?.artifacts">{{component.name}} ({{component.image}})</li>
-</ul>
+<div>
+    <h1>{{app ? app.name : 'Loading...'}}</h1>
+    <h2>Assigned components</h2>
+    <ul>
+        <li *ngFor="let component of app?.artifacts">{{component.name}} ({{component.image}})</li>
+    </ul>
+</div>
 
 <div *ngIf="edit">
     <h2>Unassigned components</h2>
@@ -10,6 +13,7 @@
     </ul>
     <a class="button" (click)="toggleEdit()">Cancel edit</a>
 </div>
+
 <div *ngIf="!edit">
     <a class="button" (click)="toggleEdit()">Edit components</a>
 </div>
