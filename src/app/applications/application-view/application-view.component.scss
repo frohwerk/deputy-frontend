@@ -2,28 +2,57 @@
 .button {
     padding: 0.6em 1.0em;
 
-    color: dodgerblue;
     font-size: 1em;
     font-weight: bold;
     text-decoration: none;
 
-    border-color: dodgerblue;
     border-width: 0.2em;
     border-style: solid;
     border-radius: 0.5em;
 
-    background-color: white;
-
     user-select: none;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &:not(:first-child) {
+        margin-inline-start: 1em;
+    }
+}
+
+// Button coloring
+.button {
+    color: dodgerblue;
+    border-color: dodgerblue;
+    background-color: white;
 
     &:active {
         color: cornflowerblue;
         border-color: cornflowerblue;
         background-color: ghostwhite;
     }
+}
 
-    &:hover {
-        cursor: pointer;
+.cancel-button {
+    color: firebrick;
+    border-color: firebrick;
+    background-color: white;
+
+    &:active {
+        color: darkred;
+        border-color: darkred;
+        background-color: ghostwhite;
+    }
+}
+
+// Action coloring
+a {
+    &.add-action {
+        color: cornflowerblue;
+    }
+    &.remove-action {
+        color: firebrick;
     }
 }
 
@@ -44,7 +73,25 @@ ul {
 
 li {
     display: flex;
-    // height: 24px;
+
+    .label {
+        // font-weight: bold;
+        margin-inline-end: 0.4em;
+    }
+
+    a {
+        font-weight: bold;
+    }
+
+    a:hover {
+        cursor: pointer;
+        user-select: none;
+        text-decoration: underline;
+    }    
+}
+
+// Border layout for whole list
+li {
     border: 0.15em solid gray;
     padding: 0.6em;
 }
@@ -54,21 +101,31 @@ li:not(:last-child){
 }
 
 li:first-child {
-    border-radius: 0.5em 0.5em 0 0;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
 }
 
 li:last-child {
-    border-radius: 0 0 0.5em 0.5em;
+    border-bottom-left-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
 }
 
-li > *:not(:last-child) {
-    margin-right: 1em;
+// Layout of button bars
+.button-bar {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
 }
 
-li > *:last-child {
-    margin-left: auto;
-}
+// Positioning of text and buttons in a row
+// li > *:not(:last-child) {
+//     margin-right: 1em;
+// }
 
-li > input[type='text'] {
-    width: 93%;
-}
+// li > *:last-child {
+//     margin-left: auto;
+// }
+
+// li > input[type='text'] {
+//     width: 93%;
+// }

@@ -13,6 +13,7 @@ import { ComponentListComponent } from './applications/application-edit/componen
 import { HttpClientModule } from '@angular/common/http';
 import { DefaultPipe } from './shared/pipes/default.pipe';
 import { FormsModule } from '@angular/forms';
+import { WatchComponent } from './example/watch/watch.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { FormsModule } from '@angular/forms';
     ApplicationsListComponent,
     ApplicationViewComponent,
     DefaultPipe,
+    WatchComponent,
   ],
   imports: [
     BrowserModule,

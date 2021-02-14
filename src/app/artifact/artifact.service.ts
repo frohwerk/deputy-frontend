@@ -43,12 +43,12 @@ export class ArtifactService {
                     }
                 }
             } catch (err) {
-                // TODO: How to accept canceled reads but nothing else...
-                console.log(`error in read loop`, err);
-                subject.error(err);
+                // TODO: Is there a better way to accept canceled reads but nothing else...?
+                if (!(err instanceof DOMException && (err as DOMException).message?.includes('aborted'))) {
+                    console.log(`error in read loop`, err);
+                    subject.error(err);
+                }
             }
-            subject.complete();
-            console.log('read loop complete!');
         };
     }
 

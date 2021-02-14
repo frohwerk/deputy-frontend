@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Application } from '../application/application';
 import { Observable } from 'rxjs';
+import { Artifact } from '../artifact/artifact';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,10 @@ export class ApplicationService {
 
   create(name: string): Observable<Application> {
     return this.http.post<Application>('/api/apps', { name: name });
+  }
+
+  updateAssignments(id: string, components: Artifact[]): Observable<void> {
+    return this.http.put<void>(`/api/apps/${id}/components`, components);
   }
 
 }

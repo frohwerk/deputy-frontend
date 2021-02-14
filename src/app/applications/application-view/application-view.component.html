@@ -2,18 +2,35 @@
     <h1>{{app ? app.name : 'Loading...'}}</h1>
     <h2>Assigned components</h2>
     <ul>
-        <li *ngFor="let component of app?.artifacts">{{component.name}} ({{component.image}})</li>
+        <li *ngFor="let component of app?.artifacts; index as i">
+            <span class="component-text">{{component.name}} ({{component.image}})</span>
+            <div *ngIf="editMode" class="button-bar">
+                <a class="remove-action" (click)="move(app.artifacts, i, unassigned)">remove</a>
+            </div>
+        </li>
     </ul>
 </div>
 
-<div *ngIf="edit">
+<div *ngIf="editMode">
     <h2>Unassigned components</h2>
     <ul>
-        <li *ngFor="let component of unassigned">{{component.name}} ({{component.image}})</li>
+        <li *ngFor="let component of unassigned; index as i">
+            <span class="component-text">{{component.name}} ({{component.image}})</span>
+            <div class="button-bar">
+                <a class="add-action" (click)="move(unassigned, i, app.artifacts)">assign</a>
+            </div>
+        </li>
     </ul>
-    <a class="button" (click)="toggleEdit()">Cancel edit</a>
+    <div class="button-bar">
+        <a class="button save-button" (click)="saveEdit()">Save edit</a>
+        <a class="button cancel-button" (click)="cancelEdit()">Cancel edit</a>
+    </div>
 </div>
 
-<div *ngIf="!edit">
-    <a class="button" (click)="toggleEdit()">Edit components</a>
+<div *ngIf="!editMode">
+    <div class="button-bar">
+        <a class="button" (click)="toggleEdit()">Edit components</a>
+    </div>
 </div>
+
+<a [routerLink]="['..']" routerLinkActive="router-link-active">Back to the applications list</a>
