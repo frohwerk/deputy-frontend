@@ -22,7 +22,7 @@
 }
 
 // Button coloring
-.button {
+.default-action {
     color: dodgerblue;
     border-color: dodgerblue;
     background-color: white;
@@ -34,7 +34,7 @@
     }
 }
 
-.cancel-button {
+.cancel-action {
     color: firebrick;
     border-color: firebrick;
     background-color: white;
@@ -111,7 +111,7 @@ li:last-child {
 }
 
 // Layout of button bars
-.button-bar {
+.action-bar {
     display: flex;
     flex-grow: 1;
     justify-content: flex-end;

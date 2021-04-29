@@ -1,4 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+@use 'app/shared/action.scss';
+@use 'app/shared/form.scss';
+@use 'app/shared/note.scss';
+@use 'app/shared/ul.scss';
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

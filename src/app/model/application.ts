@@ -1,4 +1,4 @@
-import { Artifact } from "../artifact/artifact"
+import { Artifact } from "../model/artifact"
 
 export interface Application {
     id: string,

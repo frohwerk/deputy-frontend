@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { EMPTY, Observable, Subject } from "rxjs";
 import { fromFetch } from "rxjs/fetch";
+import { Artifact } from "../model/artifact";
 import { WatchEvent } from "../watch/types";
-import { Artifact } from "./artifact";
 
 @Injectable()
 export class ArtifactService {

@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Application } from '../../application/application';
-import { Artifact } from '../../artifact/artifact';
+import { Application } from '../../model/application';
+import { Artifact } from '../../model/artifact';
 import { ArtifactService } from '../../artifact/artifact.service';
 
 @Component({

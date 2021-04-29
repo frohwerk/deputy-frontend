@@ -1,0 +1,62 @@
+.action-bar {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+
+    .action {
+        font-size: 1em;
+        font-weight: bold;
+    }
+}
+
+.action {
+    display: block;
+    padding: 0.1em 0.4em;
+
+    font-size: 1em;
+    font-weight: bold;
+    text-decoration: none;
+
+    border-width: 0.2em;
+    border-style: solid;
+    border-radius: 0.5em;
+
+    user-select: none;
+
+    &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-decoration-thickness: 0.1em;
+    }
+
+    // Layout should be determined by the container. Otherwise this breaks the ul.scss style rules to have the last item in each line aligned to the right
+    // &:not(:first-child) {
+    //     margin-inline-start: 1em;
+    // }
+
+    // Action coloring
+    &.add {
+        color: royalblue;
+        &:active { color: cornflowerblue; }
+    }
+    &.edit {
+        color: royalblue;
+        &:active { color: cornflowerblue; }
+    }
+    &.save {
+        color: royalblue;
+        &:active { color: cornflowerblue; }
+    }
+    &.remove {
+        color: firebrick;
+    }
+}
+
+li .action {
+    border: unset;
+}
+
+label .action {
+    border: unset;
+}

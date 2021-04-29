@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map, switchMap } from 'rxjs/operators';
-import { Application } from '../../application/application';
-import { Artifact } from '../../artifact/artifact';
+import { Application } from 'src/app/model/application';
+import { Artifact } from 'src/app/model/artifact';
 import { ApplicationService } from '../application.service';
 import { ComponentService } from '../component.service';
 

@@ -1,0 +1,20 @@
+form {
+    display: flex;
+    flex-direction: column;
+
+    label {
+        display: flex;
+        flex-wrap: wrap;
+        span {
+            display: inline-block;
+            min-width: 100px;
+        }
+        input {
+            flex-grow: 2;
+            min-width: 300px;
+        }
+        &:not(:last-child) {
+            margin-bottom: 5pt;
+        }
+    }
+}

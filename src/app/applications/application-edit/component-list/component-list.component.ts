@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Artifact } from '../../../artifact/artifact';
+import { Artifact } from '../../../model/artifact';
 
 @Component({
   selector: 'app-component-list',

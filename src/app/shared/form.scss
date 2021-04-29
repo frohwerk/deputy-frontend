@@ -1,0 +1,32 @@
+form {
+    display: flex;
+    flex-direction: column;
+
+    label {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        span {
+            display: inline-block;
+            min-width: 100px;
+        }
+        input {
+            flex-grow: 1;
+            min-width: 300px;
+        }
+        &:not(:last-child) {
+            margin-bottom: 5pt;
+        }
+    }
+}
+
+input {
+    border-style: solid;
+    border-width: 1px;
+    padding: 0.5em 0.5em;
+    border-radius: 0.2em;
+}
+
+input:focus {
+    border-color: lightskyblue;
+}

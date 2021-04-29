@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Artifact } from './artifact';
+import { Artifact } from 'src/app/model/artifact';
 
 @Pipe({
   name: 'unassigned'

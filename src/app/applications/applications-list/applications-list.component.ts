@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Application } from 'src/app/application/application';
+import { Application } from 'src/app/model/application';
 import { ApplicationService } from '../application.service';
 
 @Component({
@@ -13,11 +13,11 @@ export class ApplicationsListComponent implements OnInit {
 
   name: string = "";
 
-  constructor(private applicationService: ApplicationService) { }
+  constructor(private readonly applicationService: ApplicationService) { }
 
   ngOnInit(): void {
     this.applicationService.list()
-      .subscribe(result => this.applications = result);
+      .subscribe({next: result => this.applications = result});
   }
 
   onAdd(): void {

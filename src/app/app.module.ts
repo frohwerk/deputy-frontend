@@ -12,8 +12,12 @@ import { ApplicationEditComponent } from './applications/application-edit/applic
 import { ComponentListComponent } from './applications/application-edit/component-list/component-list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DefaultPipe } from './shared/pipes/default.pipe';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WatchComponent } from './example/watch/watch.component';
+import { EnvironmentListComponent } from './environments/environment-list/environment-list.component';
+import { EnvironmentEditComponent } from './environments/environment-edit/environment-edit.component';
+import { OcticonDirective } from './octicon.directive';
+import { PlatformListComponent } from './platforms/platform-list/platform-list.component';
 
 @NgModule({
   declarations: [
@@ -26,11 +30,16 @@ import { WatchComponent } from './example/watch/watch.component';
     ApplicationViewComponent,
     DefaultPipe,
     WatchComponent,
+    EnvironmentListComponent,
+    EnvironmentEditComponent,
+    OcticonDirective,
+    PlatformListComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    ReactiveFormsModule,
     FormsModule,
   ],
   providers: [

@@ -1,0 +1,20 @@
+<div>
+    <h2>Environments</h2>
+    <ul>
+        <li *ngFor="let environment of environments; index as i">
+            <a [routerLink]="[environment.id]" routerLinkActive="router-link-active">{{environment.name}}</a>
+            <!-- <div class="component-text">{{environment.name}}</div> -->
+            <!-- <div>Test</div> -->
+            <!-- <a class="edit action">edit</a> -->
+            <a class="remove action" (click)="remove(i)">remove</a>
+        </li>
+        <li>
+            <input type="text" placeholder="Enter new environment name" [(ngModel)]="name" (keydown.enter)="add()" />
+            <div>
+                <a class="add action" (click)="add()">add</a>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<a [routerLink]="['..']" routerLinkActive="router-link-active">Back to the main menu</a>
