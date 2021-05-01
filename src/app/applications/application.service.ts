@@ -14,13 +14,17 @@ export class ApplicationService {
   list(): Observable<Application[]> {
     return this.http.get<Application[]>('/api/apps');
   }
+  
+  create(name: string): Observable<Application> {
+    return this.http.post<Application>('/api/apps', { name: name });
+  }
 
   get(id: string): Observable<Application> {
     return this.http.get<Application>(`/api/apps/${id}`);
   }
 
-  create(name: string): Observable<Application> {
-    return this.http.post<Application>('/api/apps', { name: name });
+  delete(id: string): Observable<Application> {
+    return this.http.delete<Application>(`/api/apps/${id}`);
   }
 
   updateAssignments(id: string, components: Artifact[]): Observable<void> {

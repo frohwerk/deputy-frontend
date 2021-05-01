@@ -8,12 +8,15 @@
                 <a class="remove-action" (click)="move(app.artifacts, i, unassigned)">remove</a>
             </div>
         </li>
-        <li>
+        <li *ngIf="!(app?.artifacts?.length)">
+            <span class="component-text note">No components...</span>
+        </li>
+        <!-- <li>
             <span class="component-text">REMOVE ME (later)</span>
             <div *ngIf="editMode" class="action-bar">
                 <a class="action remove">remove</a>
             </div>
-        </li>
+        </li> -->
     </ul>
 </div>
 
@@ -25,6 +28,9 @@
             <div class="action-bar">
                 <a class="add-action" (click)="move(unassigned, i, app.artifacts)">assign</a>
             </div>
+        </li>
+        <li *ngIf="!(unassigned?.length)">
+            <span class="component-text note">No components...</span>
         </li>
     </ul>
     <div class="action-bar">

@@ -6,10 +6,12 @@ import { EnvironmentEditComponent } from './environments/environment-edit/enviro
 import { EnvironmentListComponent } from './environments/environment-list/environment-list.component';
 import { WatchComponent } from './example/watch/watch.component';
 import { IndexComponent } from './index/index.component';
+import { PlatformEditComponent } from './platforms/platform-edit/platform-edit.component';
 
 const routes: Routes = [
   { path: 'envs', component: EnvironmentListComponent },
   { path: 'envs/:env', component: EnvironmentEditComponent },
+  { path: 'envs/:env/platforms/:platform', component: PlatformEditComponent },
   { path: 'apps', component: ApplicationsListComponent },
   { path: 'apps/:id', component: ApplicationViewComponent },
   { path: 'watch', component: WatchComponent },

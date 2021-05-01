@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { Platform } from 'src/app/model/platform';
 import { PlatformService } from '../platform.service';
 
@@ -24,13 +23,13 @@ export class PlatformListComponent implements OnInit {
   platforms: Platform[] = []
 
   ngOnInit(): void {
-    console.log('TODO: Implement server list API component for platform listing')
+    this.env$.pipe(switchMap(env => this.api.list(env)))
+      .subscribe({next: platforms => this.platforms = [...this.platforms, ...platforms], error: err => console.log(err)})
   }
 
   add(): void {
     this.form.markAsTouched()
     if (this.form.valid) {
-      console.log('TODO: Implement server create API for PlatformListComponent::add()')
       console.log('TODO: Implement platform-edit component for platform details')
       this.env$
         .pipe(switchMap(env => this.api.create(env, this.form.controls.name.value)))
@@ -38,16 +37,15 @@ export class PlatformListComponent implements OnInit {
           next: p => this.platforms = [...this.platforms, p],
           error: err => console.log(err)
         })
-
-      this.platforms = [...this.platforms, { name: this.form.controls.name.value }]
       this.form.markAsUntouched()
       this.form.controls.name.setValue('')
     }
   }
 
   remove(i: number): void {
-    console.log('TODO: Implement API call for PlatformListComponent::remove(number)')
-    this.platforms.splice(i, 1)
+    this.env$
+      .pipe(switchMap(env => this.api.delete(env, this.platforms[i].id)))
+      .subscribe({next: () => this.platforms.splice(i, 1), error: err => console.log(err)})
   }
 
 }

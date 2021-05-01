@@ -1,0 +1,30 @@
+<h2>Platform {{platform$ ? (platform$ | async)?.name : "Loading..."}}</h2>
+
+<h3>Beschreibung</h3>
+
+<form [formGroup]="form">
+    <label>
+        <span>Name:</span>
+        <input type="text" formControlName="name">
+    </label>
+    <label>
+        <span>API-Server:</span>
+        <input type="text" formControlName="server">
+    </label>
+    <label>
+        <span>Namespace:</span>
+        <input type="text" formControlName="namespace">
+    </label>
+    <label>
+        <span>API-Key:</span>
+        <input type="text" formControlName="secret">
+        <a *ngIf="form.controls['secret'].enabled" class="add action" (click)="lockSecret()">Lock</a>
+        <a *ngIf="form.controls['secret'].disabled" class="remove action" (click)="unlockSecret()">Unlock</a>
+    </label>
+    <div class="note">You cannot display the API-Key here, you can only set a new one</div>
+    <div class="action-bar">
+        <a class="save action" (click)="save()">Speichern</a>
+    </div>
+</form>
+
+<a [routerLink]="['../..']" routerLinkActive="router-link-active">Back to the environment</a>

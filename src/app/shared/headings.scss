@@ -1,0 +1,34 @@
+h2 {
+    height: 34px;
+
+    & input {
+        font-size: inherit;
+        font-family: inherit;
+        font-weight: inherit;
+        border-style: hidden hidden solid hidden;
+
+        &:focus {
+            outline: none;
+        }
+
+        // margin: 0 0.25em;
+
+        padding: 0;
+        padding-bottom: 1px;
+    }
+
+    & a {
+        display: inline-flex;
+        vertical-align: sub;
+
+        font-size: inherit;
+        color: silver;
+
+        margin: 0 1px;
+
+        &:hover {
+            cursor: pointer;
+            text-decoration: none;
+        }
+    }
+}

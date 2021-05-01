@@ -18,6 +18,7 @@ import { EnvironmentListComponent } from './environments/environment-list/enviro
 import { EnvironmentEditComponent } from './environments/environment-edit/environment-edit.component';
 import { OcticonDirective } from './octicon.directive';
 import { PlatformListComponent } from './platforms/platform-list/platform-list.component';
+import { PlatformEditComponent } from './platforms/platform-edit/platform-edit.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { PlatformListComponent } from './platforms/platform-list/platform-list.c
     EnvironmentEditComponent,
     OcticonDirective,
     PlatformListComponent,
+    PlatformEditComponent,
   ],
   imports: [
     BrowserModule,

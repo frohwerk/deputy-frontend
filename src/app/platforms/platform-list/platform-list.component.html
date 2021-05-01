@@ -2,7 +2,7 @@
     <div *ngIf="form.touched && form.controls.name.invalid" class="note">Bitte geben Sie einen gültigen Plattform-Namen an!</div>
     <ul>
         <li *ngFor="let platform of platforms; index as i">
-            <a [routerLink]="[platform.id]" routerLinkActive="router-link-active">{{platform.name}}</a>
+            <a routerLink="platforms/{{platform.id}}" routerLinkActive="router-link-active">{{platform.name}}</a>
             <a class="remove action" (click)="remove(i)">remove</a>
         </li>
         <li>
