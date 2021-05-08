@@ -1,15 +1,39 @@
 <div>
-    <h1>{{app ? app.name : 'Loading...'}}</h1>
-    <h2>Assigned components</h2>
+    <h2>
+        Application:
+        {{app ? app.name : 'Loading...'}}
+        <span *ngIf="!editName">
+            <span style="font-weight: normal">TODO: Finish name editor</span>
+            <a class="material-icons-outlined" (click)="startEditName()">&#xe3c9;</a>
+        </span>
+        <span *ngIf="editName">
+            <input *ngIf="editName" type="text">
+            <a class="material-icons-outlined" (click)="saveEditName()">&#xe161;</a>
+        </span>
+    </h2>
+    <div class="environment">
+        <label>
+            <span>Environment:</span>
+            <select *ngIf="envs$ | async as envs" [formControl]="env">
+                <option *ngFor="let env of envs" [value]="env.id">{{env.name}}</option>
+            </select>
+            <span class="dropdown-arrow"></span>
+        </label>
+    </div>
+    <h3>Assigned components</h3>
     <ul>
         <li *ngFor="let component of app?.artifacts; index as i">
-            <span class="component-text">{{component.name}} ({{component.image}})</span>
+            <div class="component">
+                <span class="name">{{component.name}}</span>
+                <span class="image">{{component.image}}</span>
+                <span class="update">{{component.updated}}</span>
+            </div>
             <div *ngIf="editMode" class="action-bar">
-                <a class="remove-action" (click)="move(app.artifacts, i, unassigned)">remove</a>
+                <a class="action remove" (click)="move(app.artifacts, i, unassigned)">remove</a>
             </div>
         </li>
         <li *ngIf="!(app?.artifacts?.length)">
-            <span class="component-text note">No components...</span>
+            <span class="component-text note">No component has been assigned to this application yet...</span>
         </li>
         <!-- <li>
             <span class="component-text">REMOVE ME (later)</span>
@@ -21,27 +45,35 @@
 </div>
 
 <div *ngIf="editMode">
-    <h2>Unassigned components</h2>
+    <h3>Unassigned components</h3>
+    <label>
+        <input type="checkbox" [formControl]="otherApps">
+        Show components already assigned to other applications
+    </label>
     <ul>
         <li *ngFor="let component of unassigned; index as i">
-            <span class="component-text">{{component.name}} ({{component.image}})</span>
+            <div class="component">
+                <span class="name">{{component.name}}</span>
+                <span class="image">{{component.image}}</span>
+                <span class="update">{{component.updated}}</span>
+            </div>
             <div class="action-bar">
-                <a class="add-action" (click)="move(unassigned, i, app.artifacts)">assign</a>
+                <a class="action add" (click)="move(unassigned, i, app.artifacts)">assign</a>
             </div>
         </li>
         <li *ngIf="!(unassigned?.length)">
-            <span class="component-text note">No components...</span>
+            <span class="component-text note">No more unassigned components for this application</span>
         </li>
     </ul>
     <div class="action-bar">
-        <a class="button save-button" (click)="saveEdit()">Save edit</a>
-        <a class="button cancel-button" (click)="cancelEdit()">Cancel edit</a>
+        <a class="action save" (click)="saveEditComponents()">Save edit</a>
+        <a class="action cancel" (click)="cancelEditComponents()">Cancel edit</a>
     </div>
 </div>
 
 <div *ngIf="!editMode">
     <div class="action-bar">
-        <a class="button" (click)="toggleEdit()">Edit components</a>
+        <a class="action edit" (click)="toggleEditComponents()">Edit components</a>
     </div>
 </div>
 

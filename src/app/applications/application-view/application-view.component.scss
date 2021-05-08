@@ -1,131 +1,60 @@
-/* TODO: Unified styling of buttons would be good */
-.button {
-    padding: 0.6em 1.0em;
-
-    font-size: 1em;
-    font-weight: bold;
-    text-decoration: none;
-
-    border-width: 0.2em;
-    border-style: solid;
-    border-radius: 0.5em;
-
-    user-select: none;
-
-    &:hover {
-        cursor: pointer;
-    }
-
-    &:not(:first-child) {
-        margin-inline-start: 1em;
-    }
-}
-
-// Button coloring
-.default-action {
-    color: dodgerblue;
-    border-color: dodgerblue;
-    background-color: white;
-
-    &:active {
-        color: cornflowerblue;
-        border-color: cornflowerblue;
-        background-color: ghostwhite;
-    }
-}
-
-.cancel-action {
-    color: firebrick;
-    border-color: firebrick;
-    background-color: white;
-
-    &:active {
-        color: darkred;
-        border-color: darkred;
-        background-color: ghostwhite;
-    }
-}
-
-// Action coloring
-a {
-    &.add-action {
-        color: cornflowerblue;
-    }
-    &.remove-action {
-        color: firebrick;
-    }
-}
-
-ul > li:last-child {
-    margin-bottom: 1em;
-}
-
-/*
- * The same styling is used on application-list.component.scss. TODO: Maybe create a list component that encapsulates the style?
- */
-ul {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    list-style-type: none;
-    padding-left: inherit;
-}
-
 li {
-    display: flex;
-
-    .label {
-        // font-weight: bold;
-        margin-inline-end: 0.4em;
+    &>div.component {
+        display: flex;
+        flex-direction: column;
+        &>.name {
+            font-weight: bold;
+        }
+        &>.image {
+            &::before { content: 'Image: ' }
+        }
+        &>.update {
+            &::before { content: 'Last update: ' }
+        }
+        span:not(:last-child)::after {
+            content: ' ';
+        }
     }
+}
 
-    a {
+.environment {
+    display: flex;
+    label {
+        display: inline-flex;
+        flex-grow: 1;
         font-weight: bold;
     }
-
-    a:hover {
-        cursor: pointer;
-        user-select: none;
-        text-decoration: underline;
-    }    
 }
 
-// Border layout for whole list
-li {
-    border: 0.15em solid gray;
-    padding: 0.6em;
+// Custom select look-and-feel
+label {
+    select {
+        appearance: none;
+        border: none;
+        outline: none;
+
+        display: inline-block;
+        flex-grow: 1;
+        max-width: 400px;
+
+        margin-left: 12pt;
+        padding-right: 12pt;
+
+        font-size: inherit;
+
+        border-bottom: 1px solid cornflowerblue;
+
+        &:hover { cursor: pointer }
+    }
+
+    &>.dropdown-arrow {
+        &::after { content: '>' }
+        color: cornflowerblue;
+        font-weight: 900;
+        pointer-events: none;
+        text-orientation: sideways;
+        writing-mode: vertical-rl;
+        text-align: center;
+        margin-left: -12pt;
+    }
 }
-
-li:not(:last-child){
-    border-bottom: 0;
-}
-
-li:first-child {
-    border-top-left-radius: 0.5em;
-    border-top-right-radius: 0.5em;
-}
-
-li:last-child {
-    border-bottom-left-radius: 0.5em;
-    border-bottom-right-radius: 0.5em;
-}
-
-// Layout of button bars
-.action-bar {
-    display: flex;
-    flex-grow: 1;
-    justify-content: flex-end;
-}
-
-// Positioning of text and buttons in a row
-// li > *:not(:last-child) {
-//     margin-right: 1em;
-// }
-
-// li > *:last-child {
-//     margin-left: auto;
-// }
-
-// li > input[type='text'] {
-//     width: 93%;
-// }

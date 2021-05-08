@@ -4,37 +4,37 @@ ul {
     align-items: stretch;
     list-style-type: none;
     padding-left: inherit;
-}
 
-li {
-    display: flex;
-    align-items: baseline;
-    justify-content: flex-end;
-    // height: 24px;
-    border: 0.15em solid gray;
-    padding: 0.6em;
-}
+    &>li {
+        display: flex;
+        align-items: baseline;
+        justify-content: flex-end;
+        // height: 24px;
+        border: 0.15em solid gray;
+        padding: 0.6em;
 
-li:not(:last-child){
-    border-bottom: 0;
-}
+        &:not(:last-child){
+            border-bottom: 0;
+        }
+        
+        &:first-child {
+            border-top-left-radius: 0.5em;
+            border-top-right-radius: 0.5em;
+        }
+        
+        &:last-child {
+            border-bottom-left-radius: 0.5em;
+            border-bottom-right-radius: 0.5em;
+        }
 
-li:first-child {
-    border-top-left-radius: 0.5em;
-    border-top-right-radius: 0.5em;
-}
-
-li:last-child {
-    border-bottom-left-radius: 0.5em;
-    border-bottom-right-radius: 0.5em;
+        &>:first-child {
+            flex-grow: 1;
+            margin-right: 1em;
+        }
+    }
 }
 
 // 2021-04-21 - was used to create a margin between actions in a row. looks like it is no longer necessary...
 // li > *:not(:last-child) {
 //     margin-right: 1em;
 // }
-
-li > :first-child {
-    flex-grow: 1;
-    margin-right: 1em;
-}

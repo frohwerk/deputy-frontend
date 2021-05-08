@@ -9,7 +9,6 @@
             <input *ngIf="editMode" type="text" [formControl]="name">
             <a class="material-icons-outlined" (click)="save()">&#xe161;</a>
         </span>
-        
     </h2>
     <h3>Platforms</h3>
     <app-platform-list [env$]="id$"></app-platform-list>

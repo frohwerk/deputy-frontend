@@ -19,8 +19,9 @@ export class ApplicationService {
     return this.http.post<Application>('/api/apps', { name: name });
   }
 
-  get(id: string): Observable<Application> {
-    return this.http.get<Application>(`/api/apps/${id}`);
+  get(app: string, env: string): Observable<Application> {
+    console.log(`GET /api/apps/${app}?env=${env}`)
+    return this.http.get<Application>(`/api/apps/${app}?env=${env}`);
   }
 
   delete(id: string): Observable<Application> {
