@@ -45,8 +45,8 @@ export class ApplicationEditComponent implements OnInit {
 
   get members(): Artifact[] {
     return [
-      { name: 'test-component', type: 'k8s.io/api/apps/v1/Deployment', image: 'registry.openshift.cluster/my-project/test-component:1.2.3' },
-      { name: 'test-ui', type: 'k8s.io/api/apps/v1/Deployment', image: 'registry.openshift.cluster/my-project/test-ui:1.1.5' },
+      { name: 'test-component', deployments: [{image: 'registry.openshift.cluster/my-project/test-component:1.2.3'}] },
+      { name: 'test-ui', deployments: [{image: 'registry.openshift.cluster/my-project/test-ui:1.1.5'}] },
     ];
   }
 

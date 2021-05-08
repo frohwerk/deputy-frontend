@@ -1,6 +1,6 @@
+import { Deployment } from "./deployment";
+
 export interface Artifact {
     name: string,
-    type?: string,
-    image?: string,
-    updated?: Date,
+    deployments?: Deployment[],
 }
