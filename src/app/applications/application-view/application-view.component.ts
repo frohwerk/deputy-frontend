@@ -53,8 +53,8 @@ export class ApplicationViewComponent implements OnInit {
       .subscribe(env => this.env.setValue(env[0]?.id));
     // combineLatest([this.id$, this.env$])
     //   .subscribe(([id, env]) => console.log(`/api/apps/${id}?env=${env?.id}`))
-      // .pipe(switchMap(([id, env]) => this.applications.get(id, env.id)))
-      // .subscribe(app => this.setApp(app))
+    // .pipe(switchMap(([id, env]) => this.applications.get(id, env.id)))
+    // .subscribe(app => this.setApp(app))
     this.otherApps.valueChanges
       .subscribe({ next: value => this.updateUnassigned(value) });
     combineLatest([this.id$, this.env.valueChanges])
@@ -74,7 +74,7 @@ export class ApplicationViewComponent implements OnInit {
   toggleEditComponents() {
     this.editMode = true;
     if (this.unassigned == null) {
-      this.components.list(true).subscribe(result => this.unassigned = result);
+      this.updateUnassigned(this.otherApps.value)
     }
   }
 
@@ -116,14 +116,15 @@ export class ApplicationViewComponent implements OnInit {
     }
     this.app = app;
   }
+
   private updateUnassigned(otherApps: boolean): void {
     console.log(`Checkbox value: ${otherApps}`)
     if (otherApps) {
       this.id$
-        .pipe(switchMap(id => this.components.list(id)))
+        .pipe(switchMap(id => this.components.list(this.env.value, id)))
         .subscribe(result => this.unassigned = result)
-    } else {
-      this.components.list(true)
+      } else {
+      this.components.list(this.env.value, true)
         .subscribe(result => this.unassigned = result)
     }
   }

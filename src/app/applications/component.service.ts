@@ -10,17 +10,13 @@ export class ComponentService {
 
   constructor(private http: HttpClient) { }
 
-  list(value?: boolean | string | undefined): Observable<Artifact[]> {
+  list(env: string, value?: boolean | string | undefined): Observable<Artifact[]> {
     switch (typeof value) {
       case "string":
-        return this.http.get<Artifact[]>(`/api/components?unassigned=${value}`);
+        return this.http.get<Artifact[]>(`/api/components?env=${env}&unassigned=${value}`);
       default:
-        return this.http.get<Artifact[]>(`/api/components${value ? '?unassigned' : ''}`);
+        return this.http.get<Artifact[]>(`/api/components?env=${env}${value ? '&unassigned' : ''}`);
     }
-  }
-
-  listUnassignedForApp(appId: string): Observable<Artifact[]> {
-    return this.http.get<Artifact[]>(`/api/components?unassigned=${appId}`);
   }
 
 }
