@@ -1,0 +1,9 @@
+.order {
+    // display: inline-block;
+    text-orientation: sideways;
+    writing-mode: vertical-lr;
+    a.action {
+        display: inline-block;
+        &:hover { text-decoration: none }
+    }
+}

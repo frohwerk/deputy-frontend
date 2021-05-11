@@ -1,4 +1,8 @@
 <div>
+    <h3>TODOs:</h3>
+    <ol>
+    <li>Implement API that allows to save the environment order</li>
+    </ol>
     <h2>Environments</h2>
     <ul>
         <li *ngFor="let environment of environments; index as i">
@@ -6,6 +10,10 @@
             <!-- <div class="component-text">{{environment.name}}</div> -->
             <!-- <div>Test</div> -->
             <!-- <a class="edit action">edit</a> -->
+            <div class="order">
+                <a class="up action" (click)="up(i)">&lt;</a>
+                <a class="down action" (click)="down(i)">&gt;</a>
+            </div>
             <a class="remove action" (click)="remove(i)">remove</a>
         </li>
         <li>

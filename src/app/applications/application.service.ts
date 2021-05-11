@@ -14,7 +14,7 @@ export class ApplicationService {
   list(): Observable<Application[]> {
     return this.http.get<Application[]>('/api/apps');
   }
-  
+
   create(name: string): Observable<Application> {
     return this.http.post<Application>('/api/apps', { name: name });
   }
@@ -26,6 +26,10 @@ export class ApplicationService {
 
   delete(id: string): Observable<Application> {
     return this.http.delete<Application>(`/api/apps/${id}`);
+  }
+
+  updateName(id: string, name: string): Observable<Application> {
+    return this.http.patch<Application>(`/api/apps/${id}`, { name: name });
   }
 
   updateAssignments(id: string, components: Artifact[]): Observable<void> {

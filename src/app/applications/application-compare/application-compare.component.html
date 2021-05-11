@@ -1,0 +1,66 @@
+<div>
+  <h3>TODOs</h3>
+  <ol>
+    <li>Highlight the newer image (higher version number)</li>
+  </ol>
+  <h3>
+    <span>Comparing environments: {{ (from$ | async)?.name }} to</span>
+    <label>
+      <select [formControl]="target">
+        <option value=""></option>
+        <option *ngFor="let env of envs$ | async" [value]="env.id">
+          {{ env.name }}
+        </option>
+      </select>
+      <span class="dropdown-arrow"></span>
+    </label>
+    <span>for application {{ (app$ | async)?.name }}</span>
+  </h3>
+  <div>spec: {{ spec$ | async | json }}</div>
+  <div>
+    GET /api/envs/{{ (from$ | async)?.id }}/apps/{{ id$ | async }}/deployments
+  </div>
+  <div>
+    GET /api/envs/{{ (to$ | async)?.id }}/apps/{{ id$ | async }}/deployments
+  </div>
+  <div class="comparison">
+    <div class="left">
+      <h3>{{(from$ | async)?.name}}</h3>
+      <ul>
+        <li *ngFor="let v of left$ | async">
+          <div class="description">
+            <div>{{ v.name }}</div>
+            <div>Last update: {{ v.updated }}</div>
+            <div>Image: {{ v.image }}</div>
+          </div>
+          <div class="action-bar">
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="right">
+      <h3>{{(to$ | async)?.name}}</h3>
+      <ul>
+        <li *ngFor="let v of right$ | async" [ngClass]="v.image ? '' : 'missing'">
+          <div class="description">
+            <div>{{ v.name }}</div>
+            <div>Last update: {{ v.updated }}</div>
+            <div>Image: {{ v.image }}</div>
+          </div>
+          <div class="action-bar">
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!--
+        GET /api/deployments?env=1234
+        [
+        {"name": "node-hello-world", "image": "a/b/c:1", "updated": "2021-05-10T06:16:25.380286Z"}
+        ]
+    -->
+</div>
+
+<a routerLinkActive="router-link-active" routerLink="/apps/{{ id$ | async }}"
+  >&lt;&lt; back</a
+>

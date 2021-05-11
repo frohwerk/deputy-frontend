@@ -1,0 +1,33 @@
+label {
+    select {
+        appearance: none;
+        border: none;
+        outline: none;
+
+        display: inline-block;
+        flex-grow: 1;
+
+        min-width: 200px;
+        max-width: 400px;
+
+        margin-left: 12pt;
+        padding-right: 12pt;
+
+        font-size: inherit;
+
+        border-bottom: 1px solid cornflowerblue;
+
+        &:hover { cursor: pointer }
+    }
+
+    .dropdown-arrow {
+        &::after { content: '>' }
+        color: cornflowerblue;
+        font-weight: 900;
+        pointer-events: none;
+        text-orientation: sideways;
+        writing-mode: vertical-rl;
+        text-align: center;
+        margin-left: -12pt;
+    }
+}

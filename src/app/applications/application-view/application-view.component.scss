@@ -6,6 +6,10 @@ li {
             font-weight: bold;
         }
         &>.image {
+            &.undeployed {
+                color: red;
+                font-style: italic;
+            }
             &::before { content: 'Image: ' }
         }
         &>.update {
@@ -20,41 +24,8 @@ li {
 .environment {
     display: flex;
     label {
-        display: inline-flex;
-        flex-grow: 1;
+        display: flex;
         font-weight: bold;
-    }
-}
-
-// Custom select look-and-feel
-label {
-    select {
-        appearance: none;
-        border: none;
-        outline: none;
-
-        display: inline-block;
-        flex-grow: 1;
-        max-width: 400px;
-
-        margin-left: 12pt;
-        padding-right: 12pt;
-
-        font-size: inherit;
-
-        border-bottom: 1px solid cornflowerblue;
-
-        &:hover { cursor: pointer }
-    }
-
-    &>.dropdown-arrow {
-        &::after { content: '>' }
-        color: cornflowerblue;
-        font-weight: 900;
-        pointer-events: none;
-        text-orientation: sideways;
-        writing-mode: vertical-rl;
-        text-align: center;
-        margin-left: -12pt;
+        align-items: baseline;
     }
 }

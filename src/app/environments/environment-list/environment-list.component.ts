@@ -37,8 +37,26 @@ export class EnvironmentListComponent implements OnInit {
 
   remove(i: number) {
     this.environmentService
-      .delete(this.environments[i].id)
-      .subscribe(() => this.environments.splice(i, 1))
+    .delete(this.environments[i].id)
+    .subscribe(() => this.environments.splice(i, 1))
+  }
+
+  up(i: number) {
+    console.log(`up(${i})`);
+    if (i < 1) {
+      console.log(`i out of range -> no-op`)
+      return;
+    }
+    [this.environments[i-1], this.environments[i]] = [this.environments[i], this.environments[i-1]]
+  }
+
+  down(i: number) {
+    console.log(`down(${i})`);
+    if (i + 1 === this.environments.length) {
+      console.log(`i out of range -> no-op`)
+      return;
+    }
+    [this.environments[i+1], this.environments[i]] = [this.environments[i], this.environments[i+1]]
   }
 
 }

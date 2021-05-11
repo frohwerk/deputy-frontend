@@ -19,6 +19,7 @@ import { EnvironmentEditComponent } from './environments/environment-edit/enviro
 import { OcticonDirective } from './octicon.directive';
 import { PlatformListComponent } from './platforms/platform-list/platform-list.component';
 import { PlatformEditComponent } from './platforms/platform-edit/platform-edit.component';
+import { ApplicationCompareComponent } from './applications/application-compare/application-compare.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { PlatformEditComponent } from './platforms/platform-edit/platform-edit.c
     OcticonDirective,
     PlatformListComponent,
     PlatformEditComponent,
+    ApplicationCompareComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,13 +1,12 @@
 <div>
     <h2>
         Application:
-        {{app ? app.name : 'Loading...'}}
         <span *ngIf="!editName">
-            <span style="font-weight: normal">TODO: Finish name editor</span>
+            {{name.value}}
             <a class="material-icons-outlined" (click)="startEditName()">&#xe3c9;</a>
         </span>
         <span *ngIf="editName">
-            <input *ngIf="editName" type="text">
+            <input *ngIf="editName" type="text" [formControl]="name">
             <a class="material-icons-outlined" (click)="saveEditName()">&#xe161;</a>
         </span>
     </h2>
@@ -19,14 +18,15 @@
             </select>
             <span class="dropdown-arrow"></span>
         </label>
+        <a class="action" routerLink="/apps/{{id$ | async}}/compare/{{env.value}}">Compare (TODO: implement compare page)</a>
     </div>
     <h3>Assigned components</h3>
     <ul>
         <li *ngFor="let component of app?.artifacts; index as i">
             <div class="component">
                 <span class="name">{{component.name}}</span>
-                <span class="image">{{component.deployments[0]?.image}}</span>
-                <span class="update">{{component.deployments[0]?.updated}}</span>
+                <span class="image" [ngClass]="undeployed(i)">{{component.deployments ? component.deployments[0]?.image : "Not deployed"}}</span>
+                <span class="update">{{component.deployments ? component.deployments[0]?.updated : "-"}}</span>
             </div>
             <div *ngIf="editMode" class="action-bar">
                 <a class="action remove" (click)="move(app.artifacts, i, unassigned)">remove</a>

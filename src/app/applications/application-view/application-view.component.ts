@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EnvironmentService } from 'src/app/environments/environment.service';
 import { Application } from 'src/app/model/application';
@@ -23,13 +23,15 @@ export class ApplicationViewComponent implements OnInit {
 
   editMode = false;
 
+  name = new FormControl('loading...')
+
   env = new FormControl()
 
   otherApps = new FormControl(false)
 
   id$: Observable<string>;
 
-  envs$: Observable<Environment[]>;
+  envs$: Observable<Environment[]> = of([]);
 
   app: Application;
 
@@ -69,6 +71,11 @@ export class ApplicationViewComponent implements OnInit {
 
   saveEditName() {
     this.editName = false
+    if (this.name.value !== this.app.name) {
+      this.id$
+        .pipe(switchMap(id => this.applications.updateName(id, this.name.value)))
+        .subscribe({next: app => this.app.name = app.name, error: err => console.log(err)})
+    }
   }
 
   toggleEditComponents() {
@@ -104,6 +111,11 @@ export class ApplicationViewComponent implements OnInit {
     this.move(this.app.artifacts, i, this.unassigned);
   }
 
+  undeployed(i: number): string {
+    return !this.app?.artifacts[i]?.deployments
+      ? "undeployed"
+      : ""
+  }
 
   move<T>(from: T[], i: number, to: T[]) {
     to.splice(to.length, 0, from.splice(i, 1)[0]);
@@ -115,6 +127,7 @@ export class ApplicationViewComponent implements OnInit {
       app.artifacts = [];
     }
     this.app = app;
+    this.name.setValue(app.name);
   }
 
   private updateUnassigned(otherApps: boolean): void {
