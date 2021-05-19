@@ -1,14 +1,15 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, concat, Observable, of, Subject } from 'rxjs';
-import { combineAll, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { combineLatest, Observable } from 'rxjs';
+import { distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
 import { EnvironmentService } from 'src/app/environments/environment.service';
 import { Application } from 'src/app/model/application';
 import { Comparison } from 'src/app/model/comparison';
 import { Deployment } from 'src/app/model/deployment';
 import { Environment } from 'src/app/model/environment';
+import { vcompare } from 'src/app/shared/versions';
 import { ApplicationService } from '../application.service';
 import { DeploymentService } from '../deployment.service';
 
@@ -91,4 +92,24 @@ export class ApplicationCompareComponent implements OnInit {
     this.location.back();
   }
 
+  comparisonClass(deployment: Deployment, referenceSet: Deployment[]): string {
+    const other = referenceSet?.find(v => v?.name == deployment.name);
+    if (!other) return "";
+    switch (vcompare(tag(deployment), tag(other))) {
+      case -1:
+        return "older";
+      case +1:
+        return "newer";
+      default:
+        return "";
+    }
+  }
+}
+
+function tag(d: Deployment): string {
+  if (!d || !d.image) return undefined;
+  const i = d.image.lastIndexOf(":") + 1;
+  return i < d.image.length
+    ? d.image.substr(i + 1)
+    : "";
 }
