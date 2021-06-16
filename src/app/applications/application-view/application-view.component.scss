@@ -1,31 +1,42 @@
 li {
-    &>div.component {
-        display: flex;
-        flex-direction: column;
-        &>.name {
-            font-weight: bold;
-        }
-        &>.image {
-            &.undeployed {
-                color: red;
-                font-style: italic;
-            }
-            &::before { content: 'Image: ' }
-        }
-        &>.update {
-            &::before { content: 'Last update: ' }
-        }
-        span:not(:last-child)::after {
-            content: ' ';
-        }
+  & > div.component {
+    display: flex;
+    flex-direction: column;
+    & > .name {
+      font-weight: bold;
     }
+    & > .image {
+      &.undeployed {
+        color: red;
+        font-style: italic;
+      }
+      &::before {
+        content: "Image: ";
+      }
+    }
+    & > .update {
+      &::before {
+        content: "Last update: ";
+      }
+    }
+    span:not(:last-child)::after {
+      content: " ";
+    }
+  }
 }
 
 .environment {
+  display: flex;
+  label {
     display: flex;
-    label {
-        display: flex;
-        font-weight: bold;
-        align-items: baseline;
-    }
+    font-weight: bold;
+    align-items: baseline;
+  }
+}
+
+.history nav {
+  a {
+    display: inline-block;
+    &:not(:first-child) { margin-left: 1em; }
+  }
 }

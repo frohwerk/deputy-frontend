@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Application } from '../model/application';
 import { Observable } from 'rxjs';
 import { Artifact } from '../model/artifact';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +20,22 @@ export class ApplicationService {
     return this.http.post<Application>('/api/apps', { name: name });
   }
 
-  get(app: string, env: string): Observable<Application> {
-    console.log(`GET /api/apps/${app}?env=${env}`)
-    return this.http.get<Application>(`/api/apps/${app}?env=${env}`);
+  get(app: string, env: string, before?: string): Observable<Application> {
+    if (before) {
+      console.log(`GET /api/apps/${app}?env=${env}&before=${before}`)
+      return this.http.get<Application>(`/api/apps/${app}?env=${env}&before=${before}`)
+        .pipe(
+          map(app => { if (!app.components) app.components = []; return app; }),
+          tap(app => console.log(`Got app, type of validFrom: ${typeof app?.validFrom}`)),
+        )
+    } else {
+      console.log(`GET /api/apps/${app}?env=${env}`)
+      return this.http.get<Application>(`/api/apps/${app}?env=${env}`)
+      .pipe(
+        map(app => { if (!app.components) app.components = []; return app; }),
+        tap(app => console.log(`Got app, type of validFrom: ${typeof app?.validFrom}`)),
+      )
+  }
   }
 
   delete(id: string): Observable<Application> {

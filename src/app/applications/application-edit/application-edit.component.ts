@@ -45,8 +45,8 @@ export class ApplicationEditComponent implements OnInit {
 
   get members(): Artifact[] {
     return [
-      { name: 'test-component', deployments: [{image: 'registry.openshift.cluster/my-project/test-component:1.2.3'}] },
-      { name: 'test-ui', deployments: [{image: 'registry.openshift.cluster/my-project/test-ui:1.1.5'}] },
+      { name: 'test-component', image: 'registry.openshift.cluster/my-project/test-component:1.2.3' },
+      { name: 'test-ui', image: 'registry.openshift.cluster/my-project/test-ui:1.1.5' },
     ];
   }
 

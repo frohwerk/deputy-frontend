@@ -20,19 +20,32 @@
         </label>
         <a class="action" routerLink="/apps/{{id$ | async}}/compare/{{env.value}}">Compare (TODO: implement compare page)</a>
     </div>
+    <div class="history">
+        <span *ngIf="app?.validUntil; else current">
+            Valid between {{fromEpoch(app?.validFrom) | date:'YYYY-MM-dd HH:mm:ss.SSS'}} until {{fromEpoch(app?.validUntil) | date:'YYYY-MM-dd HH:mm:ss.SSS'}}
+        </span>
+        <ng-template #current>
+            Valid since {{fromEpoch(app?.validFrom) | date:'YYYY-MM-dd HH:mm:ss.SSS'}}
+        </ng-template>
+        <nav>
+            <a *ngIf="app?.created != app?.validFrom" routerLink="/apps/{{id$ | async}}" [queryParams]="{before: app?.validFrom}">&lt; before</a>
+            <a *ngIf="app?.validUntil" routerLink="/apps/{{id$ | async}}" [queryParams]="{before: app?.validUntil + 0.001}">after &gt;</a>
+            <a *ngIf="app?.validUntil" routerLink="/apps/{{id$ | async}}">current &gt;&gt;</a>
+        </nav>
+    </div>
     <h3>Assigned components</h3>
     <ul>
-        <li *ngFor="let component of app?.artifacts; index as i">
+        <li *ngFor="let component of app?.components; index as i">
             <div class="component">
                 <span class="name">{{component.name}}</span>
-                <span class="image" [ngClass]="undeployed(i)">{{component.deployments ? component.deployments[0]?.image : "Not deployed"}}</span>
-                <span class="update">{{component.deployments ? component.deployments[0]?.updated : "-"}}</span>
+                <span class="image" [ngClass]="undeployed(i)">{{component.image ? component.image : "Not deployed"}}</span>
+                <span class="update">{{component.deployed ? component.deployed : "-"}}</span>
             </div>
             <div *ngIf="editMode" class="action-bar">
-                <a class="action remove" (click)="move(app.artifacts, i, unassigned)">remove</a>
+                <a class="action remove" (click)="move(app.components, i, unassigned)">remove</a>
             </div>
         </li>
-        <li *ngIf="!(app?.artifacts?.length)">
+        <li *ngIf="!(app?.components?.length)">
             <span class="component-text note">No component has been assigned to this application yet...</span>
         </li>
         <!-- <li>
@@ -54,11 +67,11 @@
         <li *ngFor="let component of unassigned; index as i">
             <div class="component">
                 <span class="name">{{component.name}}</span>
-                <span class="image">{{component.deployments[0]?.image}}</span>
-                <span class="update">{{component.deployments[0]?.updated}}</span>
+                <span class="image">{{component.image}}</span>
+                <span class="update">{{component.deployed}}</span>
             </div>
             <div class="action-bar">
-                <a class="action add" (click)="move(unassigned, i, app.artifacts)">assign</a>
+                <a class="action add" (click)="move(unassigned, i, app.components)">assign</a>
             </div>
         </li>
         <li *ngIf="!(unassigned?.length)">

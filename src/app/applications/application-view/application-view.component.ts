@@ -35,6 +35,8 @@ export class ApplicationViewComponent implements OnInit {
 
   app: Application;
 
+  app$: Observable<Application>;
+
   unassigned: Artifact[] = undefined;
 
   undo: UndoAction[] = [];
@@ -47,27 +49,30 @@ export class ApplicationViewComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log("ngOnInit")
     this.envs$ = this.environments
       .list();
     this.id$ = this.route.params
       .pipe(map(p => p.id));
     this.envs$
       .subscribe(env => this.env.setValue(env[0]?.id));
-    // combineLatest([this.id$, this.env$])
-    //   .subscribe(([id, env]) => console.log(`/api/apps/${id}?env=${env?.id}`))
-    // .pipe(switchMap(([id, env]) => this.applications.get(id, env.id)))
-    // .subscribe(app => this.setApp(app))
+    const before$ = this.route.queryParams
+      .pipe(map(params => params.before))
     this.otherApps.valueChanges
       .subscribe({ next: value => this.updateUnassigned(value) });
-    combineLatest([this.id$, this.env.valueChanges])
-      .pipe(switchMap(([app, env]) => this.applications.get(app, env)))
+    this.app$ = combineLatest([this.id$, this.env.valueChanges, before$])
+      .pipe(switchMap(([app, env, before]) => this.applications.get(app, env, before)), tap(() => console.log(`app is here`)));
+    this.app$
       .subscribe(app => this.setApp(app))
+  }
+
+  fromEpoch(n: number): Date {
+    return new Date(Math.round(n * 1000));
   }
 
   startEditName() {
     this.editName = true
   }
-
 
   saveEditName() {
     this.editName = false
@@ -86,7 +91,7 @@ export class ApplicationViewComponent implements OnInit {
   }
 
   saveEditComponents() {
-    this.applications.updateAssignments(this.app.id, this.app.artifacts).subscribe(() => {
+    this.applications.updateAssignments(this.app.id, this.app.components).subscribe(() => {
       this.editMode = false;
       this.undo = [];
     });
@@ -95,24 +100,24 @@ export class ApplicationViewComponent implements OnInit {
   cancelEditComponents() {
     this.editMode = false;
     for (let f = this.undo.pop(); f; f = this.undo.pop()) f();
-    console.log(`Assigned components after cancel:`, this.app.artifacts);
+    console.log(`Assigned components after cancel:`, this.app.components);
     console.log(`Unassigned components after cancel:`, this.unassigned);
   }
 
   assignComponent(i: number) {
     // this.app.artifacts = [...this.app.artifacts, this.unassigned.splice(i, 1)[0]];
     // this.undo.push(() => this.unassigned.splice(i, 0, this.app.artifacts.splice(-1, 1)[0]));
-    this.move(this.unassigned, i, this.app.artifacts);
+    this.move(this.unassigned, i, this.app.components);
   }
 
   removeComponent(i: number) {
     // this.unassigned = [...this.unassigned, this.app.artifacts.splice(i, 1)[0]];
     // this.undo.push(() => this.app.artifacts.splice(i, 0, this.unassigned.splice(-1, 1)[0]));
-    this.move(this.app.artifacts, i, this.unassigned);
+    this.move(this.app.components, i, this.unassigned);
   }
 
   undeployed(i: number): string {
-    return !this.app?.artifacts[i]?.deployments
+    return !this.app?.components[i]?.image
       ? "undeployed"
       : ""
   }
@@ -123,8 +128,8 @@ export class ApplicationViewComponent implements OnInit {
   }
 
   private setApp(app: Application): void {
-    if (app.artifacts == null) {
-      app.artifacts = [];
+    if (app.components == null) {
+      app.components = [];
     }
     this.app = app;
     this.name.setValue(app.name);

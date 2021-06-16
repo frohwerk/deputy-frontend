@@ -1,4 +1,4 @@
 <ul>
-    <li *ngFor="let artifact of artifacts">{{artifact.name}} ({{artifact.deployments[0]?.image}})</li>
+    <li *ngFor="let artifact of artifacts">{{artifact.name}} ({{artifact?.image}})</li>
 </ul>
 <a [routerLink]="['/']" routerLinkActive="router-link-active" >Back to index</a>
