@@ -141,8 +141,9 @@ export class ApplicationViewComponent implements OnInit {
       this.id$
         .pipe(switchMap(id => this.components.list(this.env.value, id)))
         .subscribe(result => this.unassigned = result)
-      } else {
-      this.components.list(this.env.value, true)
+    } else {
+      this.components
+        .list(this.env.value, true)
         .subscribe(result => this.unassigned = result)
     }
   }

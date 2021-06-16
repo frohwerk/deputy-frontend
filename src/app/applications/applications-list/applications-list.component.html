@@ -4,7 +4,7 @@
         <a class="remove action" (click)="remove(i)">remove</a>
     </li>
     <li>
-        <input type="text" placeholder="Enter new application name" [(ngModel)]="name" />
+        <input type="text" placeholder="Enter new application name" [(ngModel)]="name" (keydown.enter)="add()" />
         <a class="add action" (click)="add()">add</a>
     </li>
 </ul>

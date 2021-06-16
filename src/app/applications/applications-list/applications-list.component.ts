@@ -1,3 +1,4 @@
+import { stringify } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
 import { Application } from 'src/app/model/application';
 import { ApplicationService } from '../application.service';
@@ -16,19 +17,22 @@ export class ApplicationsListComponent implements OnInit {
   constructor(private readonly api: ApplicationService) { }
 
   ngOnInit(): void {
-    this.api.list()
-      .subscribe({next: result => this.applications = result});
+    this.api
+      .list()
+      .subscribe({ next: result => this.applications = result });
   }
 
   add(): void {
     console.log(`ApplicationsListComponent.onAdd('${this.name}')`)
-    if (!this.name) return; // TODO Add error message?
-    this.api
-      .create(this.name)
-      .subscribe(result => {
-        this.applications = [...this.applications, result];
-        this.name = "";
-      });
+    if (this.name) {
+      this.api
+        .create(this.name)
+        .subscribe(app => {
+          console.log(`added app: ${JSON.stringify(app)}`)
+          this.applications = [...this.applications, app];
+          this.name = '';
+        });
+    }
   }
 
   remove(i: number): void {
