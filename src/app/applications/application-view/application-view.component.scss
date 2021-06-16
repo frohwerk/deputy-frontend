@@ -32,11 +32,14 @@ li {
     font-weight: bold;
     align-items: baseline;
   }
+
+  margin-bottom: 1em;
 }
 
-.history nav {
-  a {
+.history {
+  & > * {
     display: inline-block;
-    &:not(:first-child) { margin-left: 1em; }
+    &:not(:last-child) { margin-right: 1em; }
   }
+  .disabled { color: darkgray }
 }
