@@ -1,7 +1,7 @@
 <div>
     <h2>Dependencies of {{name$ | async}}</h2>
     <div class="dependencies">
-        <h2>Zugeordnet</h2>
+        <h3>Zugeordnet</h3>
         <ul *ngIf="assigned$ | async as assigned; else test" class="assigned">
             <li *ngFor="let c of assigned; index as i">
                 <span>{{c.name}}</span>
@@ -9,7 +9,7 @@
             </li>
             <li *ngIf="!assigned.length" class="empty">This component has no dependencies (yet)</li>
         </ul>
-        <h2>Nicht zugeordnet</h2>
+        <h3>Nicht zugeordnet</h3>
         <ul *ngIf="unassigned$ | async as unassigned; else loading" class="unassigned">
             <li *ngFor="let c of unassigned; index as i">
                 <span>{{c.name}}</span>

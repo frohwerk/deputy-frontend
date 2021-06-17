@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { first, map, shareReplay } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from 'rxjs';
+import { map, shareReplay, take } from 'rxjs/operators';
 import { ComponentService } from 'src/app/applications/component.service';
 import { Artifact } from 'src/app/model/artifact';
 
@@ -16,9 +16,9 @@ export class ComponentEditComponent implements OnInit {
 
   name$: BehaviorSubject<String> = new BehaviorSubject("")
 
-  assigned$: Subject<Artifact[]> = new Subject()
+  assigned$: Subject<Artifact[]> = new ReplaySubject()
 
-  unassigned$: Subject<Artifact[]> = new Subject()
+  unassigned$: Subject<Artifact[]> = new ReplaySubject()
 
   added: string[] = []
 
@@ -40,12 +40,14 @@ export class ComponentEditComponent implements OnInit {
     combineLatest([id$, components$])
       .pipe(map(([id, components]) => components.filter(value => value.id !== id)))
       .subscribe(values => this.unassigned$.next(values))
+    combineLatest([id$, components$])
+      .pipe(map(([id, components]) => components.filter(value => value.id !== id)))
+      .subscribe(() => this.assigned$.next([]))
     // Workaround for weired bug: update from undefined to [] does not trigger a re-render...
-    setTimeout(() => this.assigned$.next([]), 0)
   }
 
   add(i: number) {
-    this.unassigned$.pipe(first()).subscribe(unassigned => {
+    this.unassigned$.pipe(take(1)).subscribe(unassigned => {
       const j = this.removed.indexOf(unassigned[i].id)
       if (j > -1) {
         this.removed.splice(j, 1)
@@ -57,7 +59,7 @@ export class ComponentEditComponent implements OnInit {
   }
 
   remove(i: number) {
-    this.assigned$.pipe(first()).subscribe(assigned => {
+    this.assigned$.pipe(take(1)).subscribe(assigned => {
       const j = this.added.indexOf(assigned[i].id)
       if (j > -1) {
         this.added.splice(j, 1)
@@ -69,12 +71,12 @@ export class ComponentEditComponent implements OnInit {
   }
 
   move<T>(from$: Subject<T[]>, i: number, to$: Subject<T[]>) {
-    combineLatest([from$, to$]).pipe(first()).subscribe(([from, to]) => {
+    combineLatest([from$, to$]).pipe(take(1)).subscribe(([from, to]) => {
       to.splice(to.length, 0, from.splice(i, 1)[0])
       from$.next(from)
       to$.next(to)
       this.undo.push(() => {
-        combineLatest([from$, to$]).pipe(first()).subscribe(([from, to]) => {
+        combineLatest([from$, to$]).pipe(take(1)).subscribe(([from, to]) => {
           from.splice(i, 0, to.splice(-1, 1)[0]);
           from$.next(from)
           to$.next(to)
