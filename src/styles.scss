@@ -9,6 +9,7 @@
 @use 'app/shared/ul.scss';
 
 $link-color: royalblue;
+$link-color-active: dodgerblue;
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -19,8 +20,8 @@ a {
     text-decoration: none;
     &:hover {color: $link-color}
     &:visited {color: $link-color}
-
-    &:hover {text-decoration: underline;}
+    &:active {color: $link-color-active}
+    &:hover {text-decoration: underline}
 }
 
 button {

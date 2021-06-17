@@ -20,6 +20,8 @@ import { OcticonDirective } from './octicon.directive';
 import { PlatformListComponent } from './platforms/platform-list/platform-list.component';
 import { PlatformEditComponent } from './platforms/platform-edit/platform-edit.component';
 import { ApplicationCompareComponent } from './applications/application-compare/application-compare.component';
+import { ComponentsListComponent } from './components/component-list/components-list.component';
+import { ComponentEditComponent } from './components/component-edit/component-edit.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import { ApplicationCompareComponent } from './applications/application-compare/
     IndexComponent,
     ApplicationsListComponent,
     ApplicationViewComponent,
+    ComponentsListComponent,
     DefaultPipe,
     WatchComponent,
     EnvironmentListComponent,
@@ -38,6 +41,7 @@ import { ApplicationCompareComponent } from './applications/application-compare/
     PlatformListComponent,
     PlatformEditComponent,
     ApplicationCompareComponent,
+    ComponentEditComponent,
   ],
   imports: [
     BrowserModule,

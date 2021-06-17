@@ -18,7 +18,7 @@
             </select>
             <span class="dropdown-arrow"></span>
         </label>
-        <a class="action" routerLink="/apps/{{id$ | async}}/compare/{{env.value}}">Compare (TODO: implement compare page)</a>
+        <a routerLink="/apps/{{id$ | async}}/compare/{{env.value}}">compare with other environment</a>
     </div>
     <div class="history">
         <a *ngIf="app?.created != app?.validFrom" routerLink="/apps/{{id$ | async}}" [queryParams]="{before: app?.validFrom}">&lt; before</a>
@@ -36,7 +36,7 @@
             <div class="component">
                 <span class="name">{{component.name}}</span>
                 <span class="image" [ngClass]="undeployed(i)">{{component.image ? component.image : "Not deployed"}}</span>
-                <span class="update">{{component.deployed ? component.deployed : "-"}}</span>
+                <span class="update">{{component.deployed ? (component.deployed | date:'YYYY-MM-dd HH:mm:ss.SSS') : "-"}}</span>
             </div>
             <div *ngIf="editMode" class="action-bar">
                 <a class="action remove" (click)="move(app.components, i, unassigned)">remove</a>
@@ -45,12 +45,6 @@
         <li *ngIf="!(app?.components?.length)">
             <span class="component-text note">No component has been assigned to this application yet...</span>
         </li>
-        <!-- <li>
-            <span class="component-text">REMOVE ME (later)</span>
-            <div *ngIf="editMode" class="action-bar">
-                <a class="action remove">remove</a>
-            </div>
-        </li> -->
     </ul>
 </div>
 
@@ -65,7 +59,7 @@
             <div class="component">
                 <span class="name">{{component.name}}</span>
                 <span class="image">{{component.image}}</span>
-                <span class="update">{{component.deployed}}</span>
+                <span class="update">{{component.deployed ? (component.deployed | date:'YYYY-MM-dd HH:mm:ss.SSS') : "-"}}</span>
             </div>
             <div class="action-bar">
                 <a class="action add" (click)="move(unassigned, i, app.components)">assign</a>

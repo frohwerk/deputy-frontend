@@ -1,0 +1,17 @@
+<div>
+    <h3>TODOs:</h3>
+    <ol>
+    </ol>
+    <h2>Components</h2>
+    <ul>
+        <li *ngFor="let component of components$ | async; index as i">
+            <span>{{component.name}}</span>
+            <a class="action" [routerLink]="[component.id]" routerLinkActive="router-link-active">dependencies</a>
+        </li>
+        <li *ngIf="!((components$ | async)?.length)" class="empty-warning">
+            There are no components yet 😱
+        </li>
+    </ul>
+</div>
+
+<a [routerLink]="['..']" routerLinkActive="router-link-active">Back to the main menu</a>

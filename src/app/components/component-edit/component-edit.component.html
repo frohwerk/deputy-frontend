@@ -1,0 +1,32 @@
+<div>
+    <h2>Dependencies of {{name$ | async}}</h2>
+    <div class="dependencies">
+        <h2>Zugeordnet</h2>
+        <ul *ngIf="assigned$ | async as assigned; else test" class="assigned">
+            <li *ngFor="let c of assigned; index as i">
+                <span>{{c.name}}</span>
+                <a class="action" (click)="remove(i)">remove</a>
+            </li>
+            <li *ngIf="!assigned.length" class="empty">This component has no dependencies (yet)</li>
+        </ul>
+        <h2>Nicht zugeordnet</h2>
+        <ul *ngIf="unassigned$ | async as unassigned; else loading" class="unassigned">
+            <li *ngFor="let c of unassigned; index as i">
+                <span>{{c.name}}</span>
+                <a class="action add" (click)="add(i)">add</a>
+            </li>
+            <li *ngIf="!unassigned.length" class="empty">No unassigned components...</li>
+        </ul>
+    </div>
+    <div class="action-bar">
+        <a class="action save" (click)="saveEdit()">Save edit</a>
+        <a class="action cancel" (click)="cancelEdit()">Cancel edit</a>
+    </div>
+</div>
+
+<a [routerLink]="['..']" routerLinkActive="router-link-active">Back to the main menu</a>
+
+<ng-template #test>Why?</ng-template>
+<ng-template #loading>
+    <ul><li class="empty">Loading...</li></ul>
+</ng-template>
