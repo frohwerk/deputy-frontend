@@ -4,7 +4,7 @@
         <h3>Zugeordnet</h3>
         <ul *ngIf="assigned$ | async as assigned; else test" class="assigned">
             <li *ngFor="let c of assigned; index as i">
-                <span>{{c.name}}</span>
+                <a [routerLink]="['..', c.id]">{{c.name}}</a>
                 <a class="action" (click)="remove(i)">remove</a>
             </li>
             <li *ngIf="!assigned.length" class="empty">This component has no dependencies (yet)</li>
@@ -12,7 +12,7 @@
         <h3>Nicht zugeordnet</h3>
         <ul *ngIf="unassigned$ | async as unassigned; else loading" class="unassigned">
             <li *ngFor="let c of unassigned; index as i">
-                <span>{{c.name}}</span>
+                <a [routerLink]="['..', c.id]">{{c.name}}</a>
                 <a class="action add" (click)="add(i)">add</a>
             </li>
             <li *ngIf="!unassigned.length" class="empty">No unassigned components...</li>
