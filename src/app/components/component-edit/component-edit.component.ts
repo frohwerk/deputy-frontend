@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from 'rxjs';
-import { map, shareReplay, take } from 'rxjs/operators';
+import { map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { ComponentService } from 'src/app/applications/component.service';
 import { Artifact } from 'src/app/model/artifact';
 
@@ -14,7 +14,9 @@ type Action = () => void;
 })
 export class ComponentEditComponent implements OnInit {
 
-  name$: BehaviorSubject<String> = new BehaviorSubject("")
+  id$: Subject<string> = new ReplaySubject()
+
+  name$: BehaviorSubject<string> = new BehaviorSubject("")
 
   assigned$: Subject<Artifact[]> = new ReplaySubject()
 
@@ -33,16 +35,18 @@ export class ComponentEditComponent implements OnInit {
 
   ngOnInit(): void {
     const components$ = this.api.list().pipe(shareReplay())
-    const id$ = this.route.params.pipe(map(params => params.id))
-    combineLatest([id$, components$])
+    this.route.params
+      .pipe(map(params => params.id))
+      .subscribe(value => this.id$.next(value))
+    this.id$
+      .pipe(switchMap(id => this.api.listDependencies(id)))
+      .subscribe(dependencies => this.assigned$.next(dependencies))
+    combineLatest([this.id$, components$])
       .pipe(map(([id, components]) => components.find(value => value.id === id)))
       .subscribe(value => this.name$.next(value?.name))
-    combineLatest([id$, components$])
-      .pipe(map(([id, components]) => components.filter(value => value.id !== id)))
+    combineLatest([this.id$, components$, this.assigned$])
+      .pipe(map(([id, all, assigned]) => all.filter(component => component.id !== id && !assigned.some(item => item.id === component.id))))
       .subscribe(values => this.unassigned$.next(values))
-    combineLatest([id$, components$])
-      .pipe(map(([id, components]) => components.filter(value => value.id !== id)))
-      .subscribe(() => this.assigned$.next([]))
     // Workaround for weired bug: update from undefined to [] does not trigger a re-render...
   }
 
@@ -86,11 +90,14 @@ export class ComponentEditComponent implements OnInit {
   }
 
   saveEdit() {
-    console.log(`Saving added = ${JSON.stringify(this.added)}`)
-    console.log(`Saving removed = ${JSON.stringify(this.removed)}`)
-    this.undo = []
-    for (let id = this.added.pop(); id; id = this.added.pop()) console.log(`add dependency: ${id}`)
-    for (let id = this.removed.pop(); id; id = this.removed.pop()) console.log(`remove dependency: ${id}`)
+    this.id$
+      .pipe(take(1), switchMap(id => this.api.patchDependencies(id, { additions: this.added, removals: this.removed })), tap(() => console.log('patch complete')))
+      .subscribe(() => { this.undo = []; this.added = []; this.removed = [] })
+    // console.log(`Saving added = ${JSON.stringify(this.added)}`)
+    // console.log(`Saving removed = ${JSON.stringify(this.removed)}`)
+    // this.undo = []
+    // for (let id = this.added.pop(); id; id = this.added.pop()) console.log(`add dependency: ${id}`)
+    // for (let id = this.removed.pop(); id; id = this.removed.pop()) console.log(`remove dependency: ${id}`)
   }
 
   cancelEdit() {

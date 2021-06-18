@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Artifact } from '../model/artifact';
+import { DependenciesChange } from '../model/dependencies';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,14 @@ export class ComponentService {
       default:
         return this.http.get<Artifact[]>(`/api/components?env=${env}${value ? '&unassigned' : ''}`);
     }
+  }
+
+  listDependencies(componentId: string): Observable<Artifact[]> {
+    return this.http.get<Artifact[]>(`/api/components/${componentId}/dependencies`)
+  }
+
+  patchDependencies(componentId: string, changes: DependenciesChange): Observable<Artifact[]> {
+    return this.http.patch<Artifact[]>(`/api/components/${componentId}/dependencies`, changes)
   }
 
 }

@@ -1,7 +1,7 @@
 <div>
     <h2>Dependencies of {{name$ | async}}</h2>
     <div class="dependencies">
-        <h3>Zugeordnet</h3>
+        <h3>depends on</h3>
         <ul *ngIf="assigned$ | async as assigned; else test" class="assigned">
             <li *ngFor="let c of assigned; index as i">
                 <a [routerLink]="['..', c.id]">{{c.name}}</a>
@@ -9,7 +9,7 @@
             </li>
             <li *ngIf="!assigned.length" class="empty">This component has no dependencies (yet)</li>
         </ul>
-        <h3>Nicht zugeordnet</h3>
+        <h3>does not depend on</h3>
         <ul *ngIf="unassigned$ | async as unassigned; else loading" class="unassigned">
             <li *ngFor="let c of unassigned; index as i">
                 <a [routerLink]="['..', c.id]">{{c.name}}</a>
