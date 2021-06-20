@@ -27,11 +27,11 @@ li {
 
 .environment {
   display: flex;
+  margin-bottom: 1em;
+
   label {
     display: flex;
     font-weight: bold;
     align-items: baseline;
   }
-
-  margin-bottom: 1em;
 }

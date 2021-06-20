@@ -21,13 +21,14 @@ label {
     }
 
     .dropdown-arrow {
+        // TODO: Find out, why the after content is not used in width calculation at first, but is used after changing the dropdown value once
         &::after { content: '>' }
+        margin-left: -12pt;
         color: cornflowerblue;
         font-weight: 900;
         pointer-events: none;
         text-orientation: sideways;
         writing-mode: vertical-rl;
         text-align: center;
-        margin-left: -12pt;
     }
 }
