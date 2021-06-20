@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
 import { EnvironmentService } from 'src/app/environments/environment.service';
 import { Application } from 'src/app/model/application';
@@ -31,40 +31,36 @@ export class ApplicationCompareComponent implements OnInit {
   from$: Observable<Environment>
   to$: Observable<Environment>
 
-  left$: Observable<Deployment[]>
-  right$: Observable<Deployment[]>
+  left$ = new ReplaySubject<Deployment[]>()
+  right$ = new ReplaySubject<Deployment[]>()
 
   constructor(
-    private readonly location: Location,
-    route: ActivatedRoute,
-    apps: ApplicationService,
-    private readonly environments: EnvironmentService,
-    private readonly deployments: DeploymentService,
+    readonly location: Location,
+    readonly route: ActivatedRoute,
+    readonly apps: ApplicationService,
+    readonly environments: EnvironmentService,
+    readonly deployments: DeploymentService,
   ) {
     this.envs$ = environments.list();
 
-    this.id$ = route.params.pipe(
-      map(params => params.id),
-    );
+    this.id$ = route.params.pipe(map(params => params.id));
+
+    // TODO: Use me!
+    const before$ = route.queryParams.pipe(map(params => params.before))
+    before$.subscribe(before => console.log(`before: ${before}`))
 
     this.spec$ = combineLatest([
       route.params.pipe(map(params => Comparison.parse(params.spec))),
       this.target.valueChanges.pipe(startWith(this.target.value)),
     ]).pipe(map(([spec, to]) => new Comparison(spec.from, to ? to : spec.to)))
 
-    const fromEnvId = this.spec$.pipe(
-      map(spec => spec.from),
-      distinctUntilChanged(),
-    );
+    const fromEnvId = this.spec$.pipe(map(spec => spec.from), distinctUntilChanged());
     this.from$ = fromEnvId.pipe(
       switchMap(from => environments.get(from)),
       startWith({ name: "loading..." }),
     );
 
-    const toEnvId = this.spec$.pipe(
-      map(spec => spec.to),
-      distinctUntilChanged(),
-    );
+    const toEnvId = this.spec$.pipe(map(spec => spec.to), distinctUntilChanged());
     this.to$ = toEnvId.pipe(
       switchMap(to => this.envs$.pipe(map(envs => envs.find(e => e.id === to) || { name: "No target chosen yet..." }))),
       startWith({ name: "loading..." }),
@@ -74,12 +70,12 @@ export class ApplicationCompareComponent implements OnInit {
       switchMap(([id, env]) => apps.get(id, env.id)),
     );
 
-    this.left$ = combineLatest([this.id$, fromEnvId]).pipe(
-      switchMap(([appId, envId]) => deployments.listForApp(appId, envId))
-    )
-    this.right$ = combineLatest([this.id$, this.target.valueChanges]).pipe(
-      switchMap(([appId, envId]) => deployments.listForApp(appId, envId))
-    )
+    combineLatest([this.id$, fromEnvId])
+      .pipe(switchMap(([appId, envId]) => deployments.listForApp(appId, envId)))
+      .subscribe(deployments => this.left$.next(deployments))
+    combineLatest([this.id$, this.target.valueChanges])
+      .pipe(switchMap(([appId, envId]) => deployments.listForApp(appId, envId)))
+      .subscribe(deployments => this.right$.next(deployments))
   }
 
   ngOnInit(): void { }

@@ -16,18 +16,7 @@ export class EnvironmentService {
 
   list(): Observable<Environment[]> {
     return this.http.get<Environment[]>('/api/envs')
-      .pipe(
-        map(envs => {
-          console.log(JSON.stringify(envs))
-          const result = envs.sort((a, b) => {
-            console.log(`Comparing environments ${a.name} (${a.order}) with ${b.name} (${b.order})`)
-            const order = b.order - a.order;
-            return order ? order : a.name.localeCompare(b.name);
-          })
-          console.log(JSON.stringify(result))
-          return result
-        }),
-      );
+      .pipe(map(envs => envs.sort((a, b) => { const order = b.order - a.order; return order ? order : a.name.localeCompare(b.name) })));
   }
 
   create(name: string): Observable<Environment> {
