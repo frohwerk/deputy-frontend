@@ -36,7 +36,7 @@
             <div class="component">
                 <span class="name">{{component.name}}</span>
                 <span class="image" [ngClass]="undeployed(i)">{{component.image ? component.image : "Not deployed"}}</span>
-                <span class="update">{{component.deployed ? (component.deployed | date:'YYYY-MM-dd HH:mm:ss.SSS') : "-"}}</span>
+                <span class="update">{{component.deployed ? (fromEpoch(component.deployed) | date:'YYYY-MM-dd HH:mm:ss.SSS') : "-"}}</span>
             </div>
             <div *ngIf="editMode" class="action-bar">
                 <a class="action remove" (click)="move(app.components, i, unassigned)">remove</a>

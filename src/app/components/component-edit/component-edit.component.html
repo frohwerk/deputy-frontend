@@ -1,15 +1,15 @@
 <div>
     <h2>Dependencies of {{name$ | async}}</h2>
     <div class="dependencies">
-        <h3>depends on</h3>
-        <ul *ngIf="assigned$ | async as assigned; else test" class="assigned">
+        <h3>{{name$ | async}} depends on...</h3>
+        <ul *ngIf="assigned$ | async as assigned; else loading" class="assigned">
             <li *ngFor="let c of assigned; index as i">
                 <a [routerLink]="['..', c.id]">{{c.name}}</a>
-                <a class="action" (click)="remove(i)">remove</a>
+                <a class="action remove" (click)="remove(i)">remove</a>
             </li>
             <li *ngIf="!assigned.length" class="empty">This component has no dependencies (yet)</li>
         </ul>
-        <h3>does not depend on</h3>
+        <h3>{{name$ | async}} does not depend on...</h3>
         <ul *ngIf="unassigned$ | async as unassigned; else loading" class="unassigned">
             <li *ngFor="let c of unassigned; index as i">
                 <a [routerLink]="['..', c.id]">{{c.name}}</a>
@@ -26,7 +26,6 @@
 
 <a [routerLink]="['..']" routerLinkActive="router-link-active">Back to the main menu</a>
 
-<ng-template #test>Why?</ng-template>
 <ng-template #loading>
     <ul><li class="empty">Loading...</li></ul>
 </ng-template>
