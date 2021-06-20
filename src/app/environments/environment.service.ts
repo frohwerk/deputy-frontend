@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Environment } from '../model/environment';
+import { map, tap } from 'rxjs/operators';
+import { Environment, EnvironmentPatch } from '../model/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,19 @@ export class EnvironmentService {
   }
 
   list(): Observable<Environment[]> {
-    return this.http.get<Environment[]>('/api/envs');
+    return this.http.get<Environment[]>('/api/envs')
+      .pipe(
+        map(envs => {
+          console.log(JSON.stringify(envs))
+          const result = envs.sort((a, b) => {
+            console.log(`Comparing environments ${a.name} (${a.order}) with ${b.name} (${b.order})`)
+            const order = b.order - a.order;
+            return order ? order : a.name.localeCompare(b.name);
+          })
+          console.log(JSON.stringify(result))
+          return result
+        }),
+      );
   }
 
   create(name: string): Observable<Environment> {
@@ -23,6 +36,10 @@ export class EnvironmentService {
 
   update(id: string, env: Environment): Observable<Environment> {
     return this.http.put<Environment>(`/api/envs/${id}`, env);
+  }
+
+  patch(id: string, env: EnvironmentPatch): Observable<Environment> {
+    return this.http.patch<Environment>(`/api/envs/${id}`, env);
   }
 
   delete(id: string): Observable<Environment> {

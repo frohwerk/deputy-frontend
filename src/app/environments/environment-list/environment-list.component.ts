@@ -44,10 +44,13 @@ export class EnvironmentListComponent implements OnInit {
   up(i: number) {
     console.log(`up(${i})`);
     if (i < 1) {
-      console.log(`i out of range -> no-op`)
+      console.log(`i out of range -> no-op`);
       return;
     }
-    [this.environments[i-1], this.environments[i]] = [this.environments[i], this.environments[i-1]]
+    const env = this.environments[i];
+    env.order = env.order + 1;
+    this.environmentService.patch(env.id, {order: env.order}).subscribe(() => {}, err => console.log(err));
+    [this.environments[i-1], this.environments[i]] = [this.environments[i], this.environments[i-1]];
   }
 
   down(i: number) {
@@ -56,6 +59,9 @@ export class EnvironmentListComponent implements OnInit {
       console.log(`i out of range -> no-op`)
       return;
     }
+    const env = this.environments[i]
+    env.order = env.order - 1
+    this.environmentService.patch(env.id, {order: env.order}).subscribe(() => {}, err => console.log(err));
     [this.environments[i+1], this.environments[i]] = [this.environments[i], this.environments[i+1]]
   }
 
