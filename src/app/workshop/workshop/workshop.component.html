@@ -1,0 +1,7 @@
+<label>
+  <select [formControl]="from">
+    <option value=""></option>
+    <option *ngFor="let env of envs$ | async" [value]="env.id">{{ env.name }}</option>
+  </select>
+  <span class="dropdown-arrow"></span>
+</label>

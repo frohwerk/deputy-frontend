@@ -10,6 +10,7 @@ import { WatchComponent } from './example/watch/watch.component';
 import { IndexComponent } from './index/index.component';
 import { PlatformEditComponent } from './platforms/platform-edit/platform-edit.component';
 import { ComponentEditComponent } from './components/component-edit/component-edit.component';
+import { WorkshopComponent } from './workshop/workshop/workshop.component';
 
 const routes: Routes = [
   { path: 'envs', component: EnvironmentListComponent },
@@ -23,6 +24,8 @@ const routes: Routes = [
   { path: 'components', component: ComponentsListComponent },
   { path: 'components/:id', component: ComponentEditComponent },
   { path: 'watch', component: WatchComponent },
+  { path: 'workshop', component: WorkshopComponent },
+  { path: 'workshop/:spec', component: WorkshopComponent },
   { path: '**', component: IndexComponent }
 ];
 

@@ -15,7 +15,7 @@
   <div class="comparison">
     <div *ngIf="left$ | async as app; else empty" class="left">
       <h3>{{(from$ | async).name}}</h3>
-      <app-history-nav [app]="app"></app-history-nav>
+      <app-history-nav [app]="app" [queryParams]="{ source: source.value, target: target.value }"></app-history-nav>
       <ul>
         <li *ngFor="let v of app.components">
           <div class="description" [ngClass]="comparisonClass(v, right$ | async)">
@@ -54,7 +54,7 @@
   </div>
 </ng-template>
 
-<a routerLinkActive="router-link-active" routerLink="/apps/{{ id$ | async }}"
+<a routerLinkActive="router-link-active" routerLink="../.."
   >&lt;&lt; back</a
 >
 

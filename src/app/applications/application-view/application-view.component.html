@@ -18,7 +18,7 @@
             </select>
             <span class="dropdown-arrow"></span>
         </label>
-        <a routerLink="/apps/{{id$ | async}}/compare/{{env.value}}">compare</a>
+        <a routerLink="/apps/{{id$ | async}}/compare" [queryParams]="{source: env.value}">compare</a>
     </div>
     <app-history-nav [app]="app"></app-history-nav>
     <h3>Assigned components</h3>

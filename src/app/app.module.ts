@@ -23,6 +23,7 @@ import { ApplicationCompareComponent } from './applications/application-compare/
 import { ComponentsListComponent } from './components/component-list/components-list.component';
 import { ComponentEditComponent } from './components/component-edit/component-edit.component';
 import { HistoryNavComponent } from './applications/history-nav/history-nav.component';
+import { WorkshopComponent } from './workshop/workshop/workshop.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { HistoryNavComponent } from './applications/history-nav/history-nav.comp
     ApplicationCompareComponent,
     ComponentEditComponent,
     HistoryNavComponent,
+    WorkshopComponent,
   ],
   imports: [
     BrowserModule,
