@@ -13,18 +13,9 @@
     <span>for application {{ (app$ | async)?.name }}</span>
   </h3>
   <div class="comparison">
-    <div *ngIf="left$ | async as app" class="left">
-      <h3>{{(from$ | async)?.name}}</h3>
-      <div ngif class="history">
-        <a *ngIf="app?.created != app?.validFrom" [routerLink]="[]" [queryParams]="{before: app?.validFrom}">&lt; before</a>
-        <span *ngIf="app?.created == app?.validFrom" class="disabled">&lt; before</span>
-        <span *ngIf="app?.validUntil; else current">{{fromEpoch(app?.validFrom) | date:'YYYY-MM-dd HH:mm:ss.SSS'}} - {{fromEpoch(app?.validUntil) | date:'YYYY-MM-dd HH:mm:ss.SSS'}}</span>
-        <ng-template #current><span>{{fromEpoch(app?.validFrom) | date:'YYYY-MM-dd HH:mm:ss.SSS'}} - Now</span></ng-template>
-        <a *ngIf="app?.validUntil" [routerLink]="[]" [queryParams]="{before: app?.validUntil + 0.001}">after &gt;</a>
-        <a *ngIf="app?.validUntil" [routerLink]="[]" [queryParams]="">current &gt;&gt;</a>
-        <span *ngIf="!app?.validUntil" class="disabled">after &gt;</span>
-        <span *ngIf="!app?.validUntil" class="disabled">current &gt;&gt;</span>
-      </div>
+    <div *ngIf="left$ | async as app; else empty" class="left">
+      <h3>{{(from$ | async).name}}</h3>
+      <app-history-nav [app]="app"></app-history-nav>
       <ul>
         <li *ngFor="let v of app.components">
           <div class="description" [ngClass]="comparisonClass(v, right$ | async)">
@@ -37,9 +28,10 @@
         </li>
       </ul>
     </div>
-    <div class="right">
-      <h3>{{(to$ | async)?.name}}</h3>
-      <ul  *ngIf="right$ | async as app">
+    <div *ngIf="right$ | async as app; else empty" class="right">
+      <h3>{{(to$ | async).name}}</h3>
+      <div class="history">Since {{ app.validFrom ? (fromEpoch(app.validFrom) | date:'YYYY-MM-dd HH:mm:ss.SSS') : '' }}</div>
+      <ul>
         <li *ngFor="let v of app.components" [ngClass]="v.image ? '' : 'missing'">
           <div class="description" [ngClass]="comparisonClass(v, left$ | async)">
             <div>{{ v.name }}</div>
@@ -59,6 +51,12 @@
         ]
     -->
 </div>
+
+<ng-template #empty>
+  <div>
+    <h3>No target chosen yet</h3>
+  </div>
+</ng-template>
 
 <a routerLinkActive="router-link-active" routerLink="/apps/{{ id$ | async }}"
   >&lt;&lt; back</a

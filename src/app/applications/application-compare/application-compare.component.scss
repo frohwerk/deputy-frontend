@@ -6,14 +6,18 @@ li {
     display: flex;
     flex-flow: row wrap;
     gap: 12pt;
+
     &>div {
         flex-basis: 0;
         flex-grow: 1;
     }
+
     ul {
         margin: 0;
+        margin-top: 1em;
         &>li.missing { color: darkgray; }
     }
+
     margin: 12pt 0;
 }
 

@@ -22,6 +22,7 @@ import { PlatformEditComponent } from './platforms/platform-edit/platform-edit.c
 import { ApplicationCompareComponent } from './applications/application-compare/application-compare.component';
 import { ComponentsListComponent } from './components/component-list/components-list.component';
 import { ComponentEditComponent } from './components/component-edit/component-edit.component';
+import { HistoryNavComponent } from './applications/history-nav/history-nav.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { ComponentEditComponent } from './components/component-edit/component-ed
     PlatformEditComponent,
     ApplicationCompareComponent,
     ComponentEditComponent,
+    HistoryNavComponent,
   ],
   imports: [
     BrowserModule,

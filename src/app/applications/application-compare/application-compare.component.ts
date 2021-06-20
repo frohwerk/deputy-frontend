@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, Observable, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
 import { EnvironmentService } from 'src/app/environments/environment.service';
 import { Application } from 'src/app/model/application';
@@ -29,8 +29,8 @@ export class ApplicationCompareComponent implements OnInit {
   app$: Observable<Application>
   envs$: Observable<Environment[]>
 
-  from$: Observable<Environment>
-  to$: Observable<Environment>
+  from$ = new BehaviorSubject<Environment>({name: 'loading...'})
+  to$ = new BehaviorSubject<Environment>({name: 'loading...'})
 
   left$ = new ReplaySubject<Application>()
   right$ = new ReplaySubject<Application>()
@@ -56,16 +56,13 @@ export class ApplicationCompareComponent implements OnInit {
     ]).pipe(map(([spec, to]) => new Comparison(spec.from, to ? to : spec.to)))
 
     const fromEnvId = this.spec$.pipe(map(spec => spec.from), distinctUntilChanged());
-    this.from$ = fromEnvId.pipe(
-      switchMap(from => environments.get(from)),
-      startWith({ name: "loading..." }),
-    );
+    fromEnvId
+      .pipe(switchMap(id => environments.get(id)))
+      .subscribe(env => this.from$.next(env));
 
-    const toEnvId = this.spec$.pipe(map(spec => spec.to), distinctUntilChanged());
-    this.to$ = toEnvId.pipe(
-      switchMap(to => this.envs$.pipe(map(envs => envs.find(e => e.id === to) || { name: "No target chosen yet..." }))),
-      startWith({ name: "loading..." }),
-    );
+    this.target.valueChanges
+      .pipe(switchMap(to => this.envs$.pipe(map(envs => envs.find(e => e.id === to)))))
+      .subscribe(env => this.to$.next(env));
 
     this.app$ = combineLatest([this.id$, this.from$]).pipe(
       switchMap(([id, env]) => apps.get(id, env.id)),
@@ -83,10 +80,6 @@ export class ApplicationCompareComponent implements OnInit {
 
   fromEpoch(n: number): Date {
     return new Date(Math.round(n * 1000));
-  }
-
-  onChangeFrom(id: string) {
-    this.from$ = this.from$.pipe(switchMap(() => this.environments.get(id)))
   }
 
   back() {
