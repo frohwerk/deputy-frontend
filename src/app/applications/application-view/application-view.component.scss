@@ -35,11 +35,3 @@ li {
 
   margin-bottom: 1em;
 }
-
-.history {
-  & > * {
-    display: inline-block;
-    &:not(:last-child) { margin-right: 1em; }
-  }
-  .disabled { color: darkgray }
-}

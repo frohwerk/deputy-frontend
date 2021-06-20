@@ -21,12 +21,12 @@
         <a routerLink="/apps/{{id$ | async}}/compare/{{env.value}}">compare with other environment</a>
     </div>
     <div class="history">
-        <a *ngIf="app?.created != app?.validFrom" routerLink="/apps/{{id$ | async}}" [queryParams]="{before: app?.validFrom}">&lt; before</a>
+        <a *ngIf="app?.created != app?.validFrom" [routerLink]="[]" [queryParams]="{before: app?.validFrom}">&lt; before</a>
         <span *ngIf="app?.created == app?.validFrom" class="disabled">&lt; before</span>
         <span *ngIf="app?.validUntil; else current">{{fromEpoch(app?.validFrom) | date:'YYYY-MM-dd HH:mm:ss.SSS'}} - {{fromEpoch(app?.validUntil) | date:'YYYY-MM-dd HH:mm:ss.SSS'}}</span>
         <ng-template #current><span>{{fromEpoch(app?.validFrom) | date:'YYYY-MM-dd HH:mm:ss.SSS'}} - Now</span></ng-template>
-        <a *ngIf="app?.validUntil" routerLink="/apps/{{id$ | async}}" [queryParams]="{before: app?.validUntil + 0.001}">after &gt;</a>
-        <a *ngIf="app?.validUntil" routerLink="/apps/{{id$ | async}}">current &gt;&gt;</a>
+        <a *ngIf="app?.validUntil" [routerLink]="[]" [queryParams]="{before: app?.validUntil + 0.001}">after &gt;</a>
+        <a *ngIf="app?.validUntil" [routerLink]="[]" [queryParams]="">current &gt;&gt;</a>
         <span *ngIf="!app?.validUntil" class="disabled">after &gt;</span>
         <span *ngIf="!app?.validUntil" class="disabled">current &gt;&gt;</span>
     </div>

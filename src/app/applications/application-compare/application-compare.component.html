@@ -13,14 +13,24 @@
     <span>for application {{ (app$ | async)?.name }}</span>
   </h3>
   <div class="comparison">
-    <div class="left">
+    <div *ngIf="left$ | async as app" class="left">
       <h3>{{(from$ | async)?.name}}</h3>
+      <div ngif class="history">
+        <a *ngIf="app?.created != app?.validFrom" [routerLink]="[]" [queryParams]="{before: app?.validFrom}">&lt; before</a>
+        <span *ngIf="app?.created == app?.validFrom" class="disabled">&lt; before</span>
+        <span *ngIf="app?.validUntil; else current">{{fromEpoch(app?.validFrom) | date:'YYYY-MM-dd HH:mm:ss.SSS'}} - {{fromEpoch(app?.validUntil) | date:'YYYY-MM-dd HH:mm:ss.SSS'}}</span>
+        <ng-template #current><span>{{fromEpoch(app?.validFrom) | date:'YYYY-MM-dd HH:mm:ss.SSS'}} - Now</span></ng-template>
+        <a *ngIf="app?.validUntil" [routerLink]="[]" [queryParams]="{before: app?.validUntil + 0.001}">after &gt;</a>
+        <a *ngIf="app?.validUntil" [routerLink]="[]" [queryParams]="">current &gt;&gt;</a>
+        <span *ngIf="!app?.validUntil" class="disabled">after &gt;</span>
+        <span *ngIf="!app?.validUntil" class="disabled">current &gt;&gt;</span>
+      </div>
       <ul>
-        <li *ngFor="let v of left$ | async">
+        <li *ngFor="let v of app.components">
           <div class="description" [ngClass]="comparisonClass(v, right$ | async)">
             <div>{{ v.name }}</div>
-            <div>Last update: {{ v.updated }}</div>
             <div>Image: {{ v.image }}</div>
+            <div>Last update: {{ v.deployed ? (fromEpoch(v.deployed) | date:'YYYY-MM-dd HH:mm:ss.SSS') : '' }}</div>
           </div>
           <div class="action-bar">
           </div>
@@ -29,12 +39,12 @@
     </div>
     <div class="right">
       <h3>{{(to$ | async)?.name}}</h3>
-      <ul>
-        <li *ngFor="let v of right$ | async" [ngClass]="v.image ? '' : 'missing'">
+      <ul  *ngIf="right$ | async as app">
+        <li *ngFor="let v of app.components" [ngClass]="v.image ? '' : 'missing'">
           <div class="description" [ngClass]="comparisonClass(v, left$ | async)">
             <div>{{ v.name }}</div>
-            <div>Last update: {{ v.updated }}</div>
             <div>Image: {{ v.image }}</div>
+            <div>Last update: {{ v.deployed ? (fromEpoch(v.deployed) | date:'YYYY-MM-dd HH:mm:ss.SSS') : '' }}</div>
           </div>
           <div class="action-bar">
           </div>

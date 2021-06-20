@@ -6,6 +6,7 @@ import { combineLatest, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
 import { EnvironmentService } from 'src/app/environments/environment.service';
 import { Application } from 'src/app/model/application';
+import { Artifact } from 'src/app/model/artifact';
 import { Comparison } from 'src/app/model/comparison';
 import { Deployment } from 'src/app/model/deployment';
 import { Environment } from 'src/app/model/environment';
@@ -31,8 +32,8 @@ export class ApplicationCompareComponent implements OnInit {
   from$: Observable<Environment>
   to$: Observable<Environment>
 
-  left$ = new ReplaySubject<Deployment[]>()
-  right$ = new ReplaySubject<Deployment[]>()
+  left$ = new ReplaySubject<Application>()
+  right$ = new ReplaySubject<Application>()
 
   constructor(
     readonly location: Location,
@@ -70,15 +71,19 @@ export class ApplicationCompareComponent implements OnInit {
       switchMap(([id, env]) => apps.get(id, env.id)),
     );
 
-    combineLatest([this.id$, fromEnvId])
-      .pipe(switchMap(([appId, envId]) => deployments.listForApp(appId, envId)))
-      .subscribe(deployments => this.left$.next(deployments))
+    combineLatest([this.id$, fromEnvId, before$])
+      .pipe(switchMap(([appId, envId, before]) => apps.get(appId, envId, before)))
+      .subscribe(app => this.left$.next(app))
     combineLatest([this.id$, this.target.valueChanges])
-      .pipe(switchMap(([appId, envId]) => deployments.listForApp(appId, envId)))
-      .subscribe(deployments => this.right$.next(deployments))
+      .pipe(switchMap(([appId, envId]) => apps.get(appId, envId)))
+      .subscribe(app => this.right$.next(app))
   }
 
   ngOnInit(): void { }
+
+  fromEpoch(n: number): Date {
+    return new Date(Math.round(n * 1000));
+  }
 
   onChangeFrom(id: string) {
     this.from$ = this.from$.pipe(switchMap(() => this.environments.get(id)))
@@ -88,8 +93,8 @@ export class ApplicationCompareComponent implements OnInit {
     this.location.back();
   }
 
-  comparisonClass(deployment: Deployment, referenceSet: Deployment[]): string {
-    const other = referenceSet?.find(v => v?.name == deployment.name);
+  comparisonClass(deployment: Artifact, reference: Application): string {
+    const other = reference?.components?.find(v => v?.name == deployment.name);
     if (!other) return "";
     switch (vcompare(tag(deployment), tag(other))) {
       case -1:
