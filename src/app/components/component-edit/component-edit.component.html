@@ -1,10 +1,16 @@
+<div *ngIf="error$ | async as err">
+    {{err}}
+</div>
 <div>
     <h2>Dependencies of {{name$ | async}}</h2>
     <div class="dependencies">
         <h3>{{name$ | async}} depends on...</h3>
         <ul *ngIf="assigned$ | async as assigned; else loading" class="assigned">
             <li *ngFor="let c of assigned; index as i">
-                <a [routerLink]="['..', c.id]">{{c.name}}</a>
+                <span>
+                    <a [routerLink]="['..', c.id]">{{c.name}}</a>
+                    <span *ngIf="error(c.id) as message" class="error">error: {{message}}</span>
+                </span>
                 <a class="action remove" (click)="remove(i)">remove</a>
             </li>
             <li *ngIf="!assigned.length" class="empty">This component has no dependencies (yet)</li>

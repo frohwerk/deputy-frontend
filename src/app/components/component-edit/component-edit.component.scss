@@ -1,5 +1,11 @@
 .dependencies {
-    li { justify-content: flex-start; }
+    // li { justify-content: flex-start; }
+    li {
+        .error {
+            color: crimson;
+            margin-left: 1em;
+        }
+    }
 
     .empty {
         color: darkgray;

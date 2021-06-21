@@ -1,7 +1,9 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { isDefined } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from 'rxjs';
-import { map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject, zip } from 'rxjs';
+import { filter, map, shareReplay, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { ComponentService } from 'src/app/applications/component.service';
 import { Artifact } from 'src/app/model/artifact';
 
@@ -14,13 +16,17 @@ type Action = () => void;
 })
 export class ComponentEditComponent implements OnInit {
 
-  id$: Subject<string> = new ReplaySubject()
+  id$: Subject<string> = new ReplaySubject(1)
 
-  name$: BehaviorSubject<string> = new BehaviorSubject("")
+  name$: Subject<string> = new BehaviorSubject("")
 
-  assigned$: Subject<Artifact[]> = new ReplaySubject()
+  assigned$: Subject<Artifact[]> = new ReplaySubject(1)
 
-  unassigned$: Subject<Artifact[]> = new ReplaySubject()
+  unassigned$: Subject<Artifact[]> = new ReplaySubject(1)
+
+  error$: Subject<string> = new Subject()
+
+  errors = [];
 
   added: string[] = []
 
@@ -34,24 +40,34 @@ export class ComponentEditComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const components$ = this.api.list().pipe(shareReplay())
+    console.log('ComponentEditComponent::ngOnInit()')
+    const components$ = this.api.list().pipe(shareReplay());
+    // REMOVE ME
+    this.id$.subscribe(v => console.log(`this.id$ emits ${JSON.stringify(v)}`));
+    components$.subscribe(v => console.log(`components$ emits ${JSON.stringify(v)}`));
+    this.assigned$.subscribe(v => console.log(`this.assigned$ emits ${JSON.stringify(v)}`));
+    this.unassigned$.subscribe(v => console.log(`this.unassigned$ emits ${JSON.stringify(v)}`));
+    // /REMOVE ME
     this.route.params
       .pipe(map(params => params.id))
-      .subscribe(value => this.id$.next(value))
+      .subscribe(this.id$);
     this.id$
       .pipe(switchMap(id => this.api.listDependencies(id)))
-      .subscribe(dependencies => this.assigned$.next(dependencies))
+      .subscribe(this.assigned$);
     combineLatest([this.id$, components$])
       .pipe(map(([id, components]) => components.find(value => value.id === id)))
-      .subscribe(value => this.name$.next(value?.name))
-    combineLatest([this.id$, components$, this.assigned$])
-      .pipe(map(([id, all, assigned]) => all.filter(component => component.id !== id && !assigned.some(item => item.id === component.id))))
-      .subscribe(values => this.unassigned$.next(values))
+      .subscribe(value => this.name$.next(value?.name));
+    zip(this.id$, this.assigned$).pipe(withLatestFrom(components$))
+      .pipe(
+        map(([[id, assigned], all]) => [id, assigned.map(v => v.id), all] as [string, string[], Artifact[]]),
+        map(([id, assigned, all]) => all.filter(c => c.id !== id && !assigned.find(id => id === c.id)))
+      ).subscribe(this.unassigned$);
     // Workaround for weired bug: update from undefined to [] does not trigger a re-render...
   }
 
   add(i: number) {
     this.unassigned$.pipe(take(1)).subscribe(unassigned => {
+      console.log(`add(${i}): unassigned = ${JSON.stringify(unassigned)}`)
       const j = this.removed.indexOf(unassigned[i].id)
       if (j > -1) {
         this.removed.splice(j, 1)
@@ -76,34 +92,57 @@ export class ComponentEditComponent implements OnInit {
 
   move<T>(from$: Subject<T[]>, i: number, to$: Subject<T[]>) {
     combineLatest([from$, to$]).pipe(take(1)).subscribe(([from, to]) => {
-      to.splice(to.length, 0, from.splice(i, 1)[0])
-      from$.next(from)
-      to$.next(to)
+      to.splice(to.length, 0, from.splice(i, 1)[0]);
+      from$.next(from);
+      to$.next(to);
       this.undo.push(() => {
         combineLatest([from$, to$]).pipe(take(1)).subscribe(([from, to]) => {
           from.splice(i, 0, to.splice(-1, 1)[0]);
-          from$.next(from)
-          to$.next(to)
+          from$.next(from);
+          to$.next(to);
         })
       })
     })
   }
 
   saveEdit() {
-    this.id$
-      .pipe(take(1), switchMap(id => this.api.patchDependencies(id, { additions: this.added, removals: this.removed })), tap(() => console.log('patch complete')))
-      .subscribe(() => { this.undo = []; this.added = []; this.removed = [] })
-    // console.log(`Saving added = ${JSON.stringify(this.added)}`)
-    // console.log(`Saving removed = ${JSON.stringify(this.removed)}`)
-    // this.undo = []
-    // for (let id = this.added.pop(); id; id = this.added.pop()) console.log(`add dependency: ${id}`)
-    // for (let id = this.removed.pop(); id; id = this.removed.pop()) console.log(`remove dependency: ${id}`)
+    this.id$.pipe(
+      take(1),
+      switchMap(id => this.api.patchDependencies(id, { additions: this.added, removals: this.removed })), tap(() => console.log('patch complete'))
+    ).subscribe(
+      () => { this.undo = []; this.added = []; this.removed = [] },
+      response => { console.log(JSON.stringify(response)); this.handleError(response); }
+    )
   }
 
   cancelEdit() {
     this.added = []
     this.removed = []
     for (let operation = this.undo.pop(); operation; operation = this.undo.pop()) operation();
+  }
+
+  error(id: string): string {
+    console.log(`this.errors = ${JSON.stringify(this.errors)}`)
+    const err = this.errors.find(v => v.id == id)
+    console.log(`err = ${JSON.stringify(err)}`)
+    return err?.message;
+  }
+
+  private handleError(response: HttpErrorResponse) {
+    console.log("handleError...")
+    switch (response.status) {
+      case 400:
+        console.log("case 400")
+        const id = response.error.id as string;
+        const message = response.error.message as string;
+        this.errors.push({id: id, message: message});
+        break;
+      default:
+        console.log("case default")
+        console.log(`http status ${response.status}: id = '${id}' '${message}'`)
+        this.error$.next(response?.error?.message);
+    }
+    console.log("end handleError...")
   }
 
 }
