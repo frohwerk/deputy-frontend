@@ -1,11 +1,21 @@
 .action-bar {
     display: flex;
     flex-grow: 1;
+
+    align-items: center;
     justify-content: flex-end;
 
     .action {
         font-size: 1em;
         font-weight: bold;
+    }
+
+    .warning {
+        color: crimson;
+    }
+
+    &>*:not(:first-child) {
+        margin-left: 0.5em;
     }
 }
 
@@ -53,6 +63,10 @@
     }
     &.remove {
         color: firebrick;
+    }
+    &.disabled {
+        color: darkgray;
+        &:hover { text-decoration: unset }
     }
 }
 

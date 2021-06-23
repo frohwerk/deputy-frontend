@@ -2,12 +2,11 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, filter, first, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, ReplaySubject } from 'rxjs';
+import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { EnvironmentService } from 'src/app/environments/environment.service';
 import { Application } from 'src/app/model/application';
 import { Artifact } from 'src/app/model/artifact';
-import { Comparison } from 'src/app/model/comparison';
 import { Deployment } from 'src/app/model/deployment';
 import { Environment } from 'src/app/model/environment';
 import { vcompare } from 'src/app/shared/versions';
@@ -24,14 +23,16 @@ export class ApplicationCompareComponent implements OnInit {
   source = new FormControl('')
   target = new FormControl('')
 
-  app$ = new ReplaySubject<Application>()
-  envs$ = new ReplaySubject<Environment[]>()
+  app$ = new ReplaySubject<Application>(1)
+  envs$ = new ReplaySubject<Environment[]>(1)
 
-  from$ = new BehaviorSubject<Environment>({name: 'loading...'})
-  to$ = new BehaviorSubject<Environment>({name: 'loading...'})
+  from$ = new BehaviorSubject<Environment>({ name: 'loading...' })
+  to$ = new BehaviorSubject<Environment>({ name: 'loading...' })
 
-  left$ = new ReplaySubject<Application>()
-  right$ = new ReplaySubject<Application>()
+  left$ = new ReplaySubject<Application>(1)
+  right$ = new ReplaySubject<Application>(1)
+
+  copyViable$ = new ReplaySubject(1)
 
   constructor(
     readonly router: Router,
@@ -71,15 +72,19 @@ export class ApplicationCompareComponent implements OnInit {
       .pipe(switchMap(([appId, envId]) => apps.get(appId, envId)))
       .subscribe(this.right$);
 
+    combineLatest([this.left$, this.right$])
+      .pipe(map(([source, target]) => source?.components?.filter(c => c.image)?.length == target?.components?.filter(c => c.image)?.length))
+      .subscribe(this.copyViable$);
+
     this.left$.subscribe(this.app$)
 
     combineLatest([this.source.valueChanges, this.target.valueChanges])
-      .subscribe(([source, target]) => router.navigate([], {queryParams: { source: source, target: target}, relativeTo: route}))
+      .subscribe(([source, target]) => router.navigate([], { queryParams: { source: source, target: target }, relativeTo: route }))
 
-    sourceEnv$.pipe(take(1)).subscribe(id => {console.log(`this.source.setValue(${id})`); this.source.setValue(id)})
-    targetEnv$.pipe(take(1)).subscribe(id => {console.log(`this.target.setValue(${id})`); this.target.setValue(id)})
-  
-      
+    sourceEnv$.pipe(take(1)).subscribe(id => { console.log(`this.source.setValue(${id})`); this.source.setValue(id) })
+    targetEnv$.pipe(take(1)).subscribe(id => { console.log(`this.target.setValue(${id})`); this.target.setValue(id) })
+
+
     // this.spec$ = combineLatest([
     //   route.params.pipe(map(params => Comparison.parse(params.spec))),
     //   this.target.valueChanges.pipe(startWith(this.target.value)),
@@ -125,6 +130,17 @@ export class ApplicationCompareComponent implements OnInit {
         return "";
     }
   }
+
+  copyViable(): boolean {
+    combineLatest([this.left$, this.right$])
+      .pipe(map(([source, target]) => source?.components?.length == target?.components?.length))
+    return false;
+  }
+
+  doCopy(): void {
+    // TODO
+  }
+
 }
 
 function tag(d: Deployment): string {

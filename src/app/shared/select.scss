@@ -10,7 +10,8 @@ label {
         min-width: 200px;
         max-width: 400px;
 
-        margin-left: 12pt;
+        margin-left: 6pt;
+        margin-right: 6pt;
         padding-right: 12pt;
 
         font-size: inherit;
@@ -23,6 +24,9 @@ label {
     .dropdown-arrow {
         // TODO: Find out, why the after content is not used in width calculation at first, but is used after changing the dropdown value once
         &::after { content: '>' }
+        width: 1em;
+        display: inline-block;
+        padding-top: 6px;
         margin-left: -12pt;
         color: cornflowerblue;
         font-weight: 900;

@@ -40,13 +40,16 @@
       </ul>
     </div>
   </div>
-  <!--
-        GET /api/deployments?env=1234
-        [
-        {"name": "node-hello-world", "image": "a/b/c:1", "updated": "2021-05-10T06:16:25.380286Z"}
-        ]
-    -->
 </div>
+
+<div class="action-bar">
+  <a *ngIf="copyViable$ | async; else disabled" class="action edit" (click)="doCopy()">Copy from {{(from$ | async).name}} to {{(to$ | async).name}}</a>
+</div>
+
+<ng-template #disabled>
+  <span *ngIf="right$ | async" class="warning">At least one component is not deployed on the target environment. Initial deployment of components is not supported</span>
+  <span class="action disabled">Copy from {{(from$ | async).name}} to {{(to$ | async).name}}</span>
+</ng-template>
 
 <ng-template #empty>
   <div>
@@ -54,11 +57,4 @@
   </div>
 </ng-template>
 
-<a routerLinkActive="router-link-active" routerLink="../.."
-  >&lt;&lt; back</a
->
-
-<h3>TODOs</h3>
-<ol>
-  <li>Highlight the newer image (higher version number)</li>
-</ol>
+<a routerLinkActive="router-link-active" routerLink="..">&lt;&lt; back</a>
