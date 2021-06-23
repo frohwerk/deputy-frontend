@@ -1,9 +1,10 @@
 import { Location } from '@angular/common';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, ReplaySubject } from 'rxjs';
-import { filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from 'rxjs';
+import { defaultIfEmpty, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { EnvironmentService } from 'src/app/environments/environment.service';
 import { Application } from 'src/app/model/application';
 import { Artifact } from 'src/app/model/artifact';
@@ -32,9 +33,13 @@ export class ApplicationCompareComponent implements OnInit {
   left$ = new ReplaySubject<Application>(1)
   right$ = new ReplaySubject<Application>(1)
 
-  copyViable$ = new ReplaySubject(1)
+  before$ = new ReplaySubject<string>(1)
+  copyViable$ = new ReplaySubject<boolean>(1)
+
+  message$ = new Subject()
 
   constructor(
+    readonly http: HttpClient,
     readonly router: Router,
     readonly location: Location,
     readonly route: ActivatedRoute,
@@ -46,8 +51,8 @@ export class ApplicationCompareComponent implements OnInit {
 
     const id$ = route.params.pipe(map(path => path.id), tap(v => console.log(`id parameter: ${v}`)));
     const sourceEnv$ = route.queryParams.pipe(map(query => query.source), filter(defined), tap(v => console.log(`source parameter: ${v}`)));
-    const before$ = route.queryParams.pipe(map(query => query.before));
     const targetEnv$ = route.queryParams.pipe(map(query => query.target), filter(defined), tap(v => console.log(`target parameter: ${v}`)));
+    route.queryParams.pipe(map(query => query.before)).subscribe(this.before$);
 
     // source$.pipe(filter(s => s)).subscribe(id => )
     this.envs$.subscribe(envs => console.log(`envs available: ${JSON.stringify(envs)}`));
@@ -64,7 +69,7 @@ export class ApplicationCompareComponent implements OnInit {
       .pipe(tap(env => console.log(`this.to$.next(${JSON.stringify(env)})`)))
       .subscribe(this.to$);
 
-    combineLatest([id$, sourceEnv$, before$])
+    combineLatest([id$, sourceEnv$, this.before$])
       .pipe(switchMap(([appId, envId, before]) => apps.get(appId, envId, before)), map(sortComponentsByName))
       .subscribe(this.left$);
 
@@ -138,9 +143,19 @@ export class ApplicationCompareComponent implements OnInit {
   }
 
   doCopy(): void {
-    // TODO
+    combineLatest([this.left$, this.from$, this.to$, this.before$.pipe(defaultIfEmpty(`now`))]).pipe(
+      take(1),
+      switchMap(([app, from, to, before]) => {
+        const params = new HttpParams()
+          .set(`appId`, app.id)
+          .set(`source`, from.id)
+          .set(`target`, to.id)
+          .set(`before`, before ? before : "now")
+          .set(`dryRun`, `true`)
+          return this.http.post<string>(`/api/tasks/copy`, null, { params: params })
+      })
+    ).subscribe(this.message$)
   }
-
 }
 
 function tag(d: Deployment): string {
