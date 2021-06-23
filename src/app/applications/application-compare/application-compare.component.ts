@@ -65,11 +65,11 @@ export class ApplicationCompareComponent implements OnInit {
       .subscribe(this.to$);
 
     combineLatest([id$, sourceEnv$, before$])
-      .pipe(switchMap(([appId, envId, before]) => apps.get(appId, envId, before)))
+      .pipe(switchMap(([appId, envId, before]) => apps.get(appId, envId, before)), map(sortComponentsByName))
       .subscribe(this.left$);
 
     combineLatest([id$, targetEnv$])
-      .pipe(switchMap(([appId, envId]) => apps.get(appId, envId)))
+      .pipe(switchMap(([appId, envId]) => apps.get(appId, envId)), map(sortComponentsByName))
       .subscribe(this.right$);
 
     combineLatest([this.left$, this.right$])
@@ -153,4 +153,9 @@ function tag(d: Deployment): string {
 
 function defined(v: any): boolean {
   return v;
+}
+
+function sortComponentsByName(app: Application): Application {
+  app.components.sort((a, b) => a?.name < b?.name ? -1 : 1)
+  return app;
 }

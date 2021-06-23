@@ -25,6 +25,7 @@ label {
         // TODO: Find out, why the after content is not used in width calculation at first, but is used after changing the dropdown value once
         &::after { content: '>' }
         width: 1em;
+        font-size: 16px;
         display: inline-block;
         padding-top: 6px;
         margin-left: -12pt;
