@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,8 @@ export class AppComponent implements OnInit {
   username?: string
 
   givenName?: string
+
+  constructor(readonly router: Router) { }
 
   ngOnInit(): void {
     const cookies = parseCookies(document.cookie)

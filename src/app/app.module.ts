@@ -24,6 +24,7 @@ import { ComponentsListComponent } from './components/component-list/components-
 import { ComponentEditComponent } from './components/component-edit/component-edit.component';
 import { HistoryNavComponent } from './applications/history-nav/history-nav.component';
 import { WorkshopComponent } from './workshop/workshop/workshop.component';
+import { LogComponent } from './tasks/log/log.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { WorkshopComponent } from './workshop/workshop/workshop.component';
     ComponentEditComponent,
     HistoryNavComponent,
     WorkshopComponent,
+    LogComponent,
   ],
   imports: [
     BrowserModule,

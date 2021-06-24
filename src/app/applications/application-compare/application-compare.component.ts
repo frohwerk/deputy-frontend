@@ -13,6 +13,7 @@ import { Environment } from 'src/app/model/environment';
 import { vcompare } from 'src/app/shared/versions';
 import { ApplicationService } from '../application.service';
 import { DeploymentService } from '../deployment.service';
+import { TaskAcceptedResponse } from './task-accepted-response';
 
 @Component({
   selector: 'app-application-compare',
@@ -152,9 +153,9 @@ export class ApplicationCompareComponent implements OnInit {
           .set(`target`, to.id)
           .set(`before`, before ? before : "now")
           .set(`dryRun`, `true`)
-          return this.http.post<string>(`/api/tasks/copy`, null, { params: params })
+          return this.http.post<TaskAcceptedResponse>(`/api/tasks/copy`, null, { params: params })
       })
-    ).subscribe(this.message$)
+    ).subscribe(resp => this.router.navigate(['tasks', resp.id]))
   }
 }
 

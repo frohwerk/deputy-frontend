@@ -11,6 +11,7 @@ import { IndexComponent } from './index/index.component';
 import { PlatformEditComponent } from './platforms/platform-edit/platform-edit.component';
 import { ComponentEditComponent } from './components/component-edit/component-edit.component';
 import { WorkshopComponent } from './workshop/workshop/workshop.component';
+import { LogComponent } from './tasks/log/log.component';
 
 const routes: Routes = [
   { path: 'envs', component: EnvironmentListComponent },
@@ -19,8 +20,7 @@ const routes: Routes = [
   { path: 'apps', component: ApplicationsListComponent },
   { path: 'apps/:id', component: ApplicationViewComponent },
   { path: 'apps/:id/compare', component: ApplicationCompareComponent },
-  { path: 'apps/:id/compare/:spec', component: ApplicationCompareComponent },
-  { path: 'apps/:id/compare/:from...:to', component: ApplicationCompareComponent },
+  { path: 'tasks/:id', component: LogComponent },
   { path: 'components', component: ComponentsListComponent },
   { path: 'components/:id', component: ComponentEditComponent },
   { path: 'watch', component: WatchComponent },
