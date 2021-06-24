@@ -50,7 +50,7 @@
             <div class="component">
                 <span class="name">{{component.name}}</span>
                 <span class="image">{{component.image}}</span>
-                <span class="update">{{component.deployed ? (component.deployed | date:'YYYY-MM-dd HH:mm:ss.SSS') : "-"}}</span>
+                <span class="update">{{component.deployed ? (fromEpoch(component.deployed) | date:'YYYY-MM-dd HH:mm:ss.SSS') : "-"}}</span>
             </div>
             <div class="action-bar">
                 <a class="action add" (click)="move(unassigned, i, app.components)">assign</a>
