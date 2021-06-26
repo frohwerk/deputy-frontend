@@ -28,6 +28,7 @@
                 <span class="name">{{component.name}}</span>
                 <span class="image" [ngClass]="undeployed(i)">{{component.image ? component.image : "Not deployed"}}</span>
                 <span class="update">{{component.deployed ? (fromEpoch(component.deployed) | date:'YYYY-MM-dd HH:mm:ss.SSS') : "-"}}</span>
+                <span class="artifact" *ngIf="component.artifact">{{component.artifact}}</span>
             </div>
             <div *ngIf="editMode" class="action-bar">
                 <a class="action remove" (click)="move(app.components, i, unassigned)">remove</a>
@@ -51,6 +52,7 @@
                 <span class="name">{{component.name}}</span>
                 <span class="image">{{component.image}}</span>
                 <span class="update">{{component.deployed ? (fromEpoch(component.deployed) | date:'YYYY-MM-dd HH:mm:ss.SSS') : "-"}}</span>
+                <span class="artifact" *ngIf="component.artifact">{{component.artifact}}</span>
             </div>
             <div class="action-bar">
                 <a class="action add" (click)="move(unassigned, i, app.components)">assign</a>

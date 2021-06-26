@@ -19,6 +19,11 @@ li {
         content: "Last update: ";
       }
     }
+    & > .artifact {
+      &::before {
+        content: "Artifact: ";
+      }
+    }
     span:not(:last-child)::after {
       content: " ";
     }
