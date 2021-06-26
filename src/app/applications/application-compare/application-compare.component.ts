@@ -25,6 +25,8 @@ export class ApplicationCompareComponent implements OnInit {
   source = new FormControl('')
   target = new FormControl('')
 
+  dryRun = new FormControl(false)
+
   app$ = new ReplaySubject<Application>(1)
   envs$ = new ReplaySubject<Environment[]>(1)
 
@@ -143,7 +145,7 @@ export class ApplicationCompareComponent implements OnInit {
     return false;
   }
 
-  doCopy(): void {
+  doCopy(dryRun: boolean): void {
     combineLatest([this.left$, this.from$, this.to$, this.before$.pipe(defaultIfEmpty(`now`))]).pipe(
       take(1),
       switchMap(([app, from, to, before]) => {
@@ -152,7 +154,7 @@ export class ApplicationCompareComponent implements OnInit {
           .set(`source`, from.id)
           .set(`target`, to.id)
           .set(`before`, before ? before : "now")
-          .set(`dryRun`, `true`)
+          .set(`dryRun`, dryRun ? 'true' : 'false')
           return this.http.post<TaskAcceptedResponse>(`/api/tasks/copy`, null, { params: params })
       })
     ).subscribe(resp => this.router.navigate(['tasks', resp.id]))

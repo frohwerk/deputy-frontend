@@ -42,13 +42,16 @@
   </div>
 </div>
 
-<div class="action-bar">
-  <a *ngIf="copyViable$ | async; else disabled" class="action edit" (click)="doCopy()">Copy from {{(from$ | async).name}} to {{(to$ | async).name}}</a>
+<div *ngIf="copyViable$ | async; else disabled" class="action-bar">
+  <a class="action edit" (click)="doCopy(true)">View rollout plan {{(from$ | async).name}} =&gt; {{(to$ | async).name}}</a>
+  <a class="action edit" (click)="doCopy(false)">Copy {{(from$ | async).name}} =&gt; {{(to$ | async).name}}</a>
 </div>
 
 <ng-template #disabled>
-  <span *ngIf="right$ | async" class="warning">At least one component is not deployed on the target environment. Initial deployment of components is not supported</span>
-  <span class="action disabled">Copy from {{(from$ | async).name}} to {{(to$ | async).name}}</span>
+  <div class="action-bar">
+    <span *ngIf="right$ | async" class="warning">At least one component is not deployed on the target environment. Initial deployment of components is not supported</span>
+    <span class="action disabled">Copy from {{(from$ | async).name}} to {{(to$ | async).name}}</span>
+  </div>
 </ng-template>
 
 <ng-template #empty>

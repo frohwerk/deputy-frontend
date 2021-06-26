@@ -18,7 +18,7 @@ export class LogComponent {
     readonly route: ActivatedRoute,
   ) {
     route.params
-      .pipe(switchMap(params => http.get(`https://127.0.0.1.nip.io/api/tasks/copy/${params.id}/logs`, { responseType: 'text' })))
+      .pipe(switchMap(params => http.get(`/api/tasks/copy/${params.id}/logs`, { responseType: 'text' })))
       .subscribe(this.log$);
   }
 
