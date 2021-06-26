@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: deputyfe
+  annotations:
+    service.alpha.openshift.io/serving-cert-secret-name: deputyfe-cert
+spec:
+  selector:
+    app: deputyfe
+  ports:
+  - port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deputyfe
+spec:
+  selector:
+    matchLabels:
+      app: deputyfe
+  template:
+    metadata:
+      labels:
+        app: deputyfe
+    spec:
+      containers:
+      - name: deputyfe
+        image: 172.30.1.1:5000/myproject/deputyfe:latest
+        volumeMounts:
+          - name: deputyfe-cert-volume
+            mountPath: /etc/secrets
+            readOnly: true
+        resources:
+          limits:
+            cpu: "0.1"
+            memory: "128Mi"
+      volumes:
+      - name: deputyfe-cert-volume
+        secret:
+          secretName: deputyfe-cert
